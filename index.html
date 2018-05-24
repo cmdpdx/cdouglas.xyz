@@ -4,10 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>cdouglas.xyz</title>
+    <!-- Font Awesome CDN - SVG with JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+    <!-- Bootstrap CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
+    <!-- Navigation bar -->
     <!--
     <header>
       <nav class="navbar navbar-expand-md navbar-light bg-light">
@@ -31,13 +35,19 @@
         </div>
       </nav>
     </header>
--->
-    <header>
-      <p>Here is some header info</p>
-    </header>
-    
-    <div class="container-fluid">
-      <div class="row no-gutters">
+    -->
+
+    <div class="container-fluid px-0">
+      <div class="jumbotron jumbotron-fluid bg-dark text-white w-100">
+          <div class="container">
+            <h1 class="display-3">Colin Douglas</h1>
+            <h4 class="text-muted">teach // code // solve problems</h4>
+            <p class="lead"><strong>Mathematics and computer science teacher, teaching high-level, abstract concepts to exceptional and underrepresented middle school students; motivated by efficient problem solving and creating.</strong></p>
+          </div>
+      </div>
+      
+      <!--
+      <div class="row no-gutters bg-dark text-white">
         <div class="col-sm-12 col-md-8 col-lg-7">
           <h1 class="display-3">Colin Douglas</h1>
         </div>
@@ -45,7 +55,10 @@
           <h4 class="text-muted text-right">teach // code // solve problems</h4>
         </div>
       </div>
+      -->
       
+      <!--  Carousel -->
+      <!--
       <div id="titleCarousel" class="carousel slide" data-ride="carousel" data-interval="7000">
         <ol class="carousel-indicators">
           <li data-target="#titleCarousel" data-slide-to="0" class="active"></li>
@@ -74,30 +87,32 @@
         <a class="carousel-control-next" href="#titleCarousel" role="button" data-slide="next">
           <span class="carousel-control-next-icon"></span>
         </a>
-        
       </div>
       
+      -->
+      
+      <!--
       <div class="row justify-content-center">
         <div class="col-xs-12 d-block d-sm-none text-center">
           <img class="img-fluid w-50" style="border-radius: 50%;" src="colin_w_isaac.jpeg">
         </div>
         
         <div class="col-xs-12 col-sm-8">
-          <p class="lead"><strong>Mathematics and computer science teacher, specializing in blah albh albh; motivated by efficient problem solving and creating.</strong></p>
-          <p>some space</p>
-          <p> more space</p>
+          <p class="lead"><strong>Mathematics and computer science teacher, teaching high level, abstract concepts to exceptional and underrepresented middle school students; motivated by efficient problem solving and creating.</strong></p>
+          
         </div>
         <div class="d-none d-sm-block col-sm-3">
           <img class="img-fluid" style="border-radius: 50%;" src="colin_w_isaac.jpeg">
         </div>
       </div>
+      -->
       
-      <div class="row justify-content-left">
+      <div class="row justify-content-left p-2 m-2">
         <div class="col-sm-12">
           <p class="display-4">Recent projects</p>
         </div>
       </div>
-      <div class="row justify-content-center" id="examples">
+      <div class="row justify-content-center p-2 m-2" id="examples">
         <div class="col-sm-8 col-md-4">
           <div class="card">
             <img class="card-img-top" src="coming-soon.png" alt="Project coming soon...">
@@ -130,8 +145,14 @@
       </div>
     </div>
     
-    <footer>
-      <p>Some contact info</p>
+    <div class="row bg-dark text-white p-2">
+      <div class="col-2 border">
+        <img class="img-fluid w-50" style="border-radius: 50%;" src="colin_w_isaac.jpeg" alt="Colin with his son">
+      </div>
+      <div class="col"></div>
+      <div class="col-3 text-right border">
+        <a href="#" class="text-white"><i class="fab fa-github fa-3x"></i></a>
+      </div>
     </footer>
 
 
