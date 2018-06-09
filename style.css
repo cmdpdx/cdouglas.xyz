@@ -1,6 +1,56 @@
+body {
+  font-family: 'Rubik', sans-serif;
+}
+
+h1 {
+  font-family: 'Bungee', sans-serif;
+}
+
+h3 {
+  font-family: 'Trirong', serif;
+}
+
+nav a:hover {
+  text-decoration: none;
+}
+
 nav {
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
   transition: all 0.5s;
 }
 
+.background {
+  position: relative;
+  width: 0px;
+  height: 100%;
+}
+
+.square {
+  position: absolute;
+
+}
+
+.gray {
+  background-color: #444;
+}
+
+.primary {
+  background-color: #ff0000;
+}
+
+.primary-text {
+  color: #ff0000;
+}
+
+.secondary1 {
+  background-color: #007dff;
+}
+
+.secondary1-text {
+  color: #007dff;
+}
+
+.secondary2 {
+  background-color: #00ff7d;
+}
