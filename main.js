@@ -1,19 +1,37 @@
 let colors = ["gray", "primary", "secondary1", "secondary2"];
+let current_width = 0;
 
 function createBackground(deviceSize) {
   let current = 0;
   let prev_color = "";
   let color = "";
+  
+  // Default case: screen size of lg or xl
   let limit = Math.floor($(window).height() / $(window).width() * 100) - 20;
   let num_cols =  50;
   let multiplier = 2;
   
-  if (deviceSize != "xl" && deviceSize != "lg") {
-    limit -= 20;
-    num_cols = 25;
-    multiplier = 4;
+  // For smaller screens, decrease columns and increase multiplier as necessary
+  switch (deviceSize) {
+    case "md":
+      limit -= 15;
+      num_cols = 33;
+      multiplier = 3;
+      break;
+    case "sm":
+      limit -= 20;
+      num_cols = 25;
+      multiplier = 4;
+      break;
+    case "xs":
+      limit -= 20;
+      num_cols = 20;
+      multiplier = 5;
+      break;
+    default:
+      break;
   }
-
+  
   for (let i = 0; i < 150; i++) {
     current += 1 + (Math.floor(Math.random() * 2));
     if (Math.floor(Math.random() * 3) < 1) {
@@ -71,9 +89,5 @@ $(window).on('resize', function() {
 $(document).ready(function() {
   let screenSize = $(window).width();
   let deviceSize = getDeviceSize(screenSize);
-
-
-  console.log(screenSize);
-  console.log(deviceSize);
   createBackground(deviceSize);
 });
