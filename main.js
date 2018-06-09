@@ -46,6 +46,7 @@ function createBackground(deviceSize) {
 
     let style = 'style="left: ' + x + 'vw; top: ' + y + 'vw; width: ' + multiplier + 'vw; height: ' + multiplier + 'vw;"';
 
+    // don't repeat colors in adjacent squares
     while (color === prev_color) {
       color = colors[Math.floor(Math.random() * 4)];
     }
@@ -81,9 +82,11 @@ $(window).on('resize', function() {
   let win = $(this);
   let screenSize = win.width();
   let deviceSize = getDeviceSize(screenSize);
-
-  $('.background').empty();
-  createBackground(deviceSize);
+  if (current_width != screenSize) {
+    current_width = screenSize;
+    $('.background').empty();
+    createBackground(deviceSize);
+  }
 });
 
 $(document).ready(function() {
