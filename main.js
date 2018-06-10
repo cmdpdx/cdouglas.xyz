@@ -56,6 +56,23 @@ function createBackground(deviceSize) {
   }
 }
 
+function comingSoon(parent) {
+  let colors = ["gray", "primary", "secondary1", "secondary2"];
+
+  for (let i = 0; i < 4; i++) {
+    let index = Math.floor(Math.random() * colors.length);
+    let color = colors.splice(index, 1);
+    console.log(color);
+    let left = (i%2) * 50;
+    let top = Math.floor(i/2) * 50;
+    let style = 'style="position: absolute; width: 50%; height: 50%; left: ' + left + '%; top: ' + top + '%; z-index: 1;"'; 
+    $(parent).append('<div class="' + color + '" ' + style + '></div>');
+  }
+
+  $(parent).append('<div class="coming-soon-title" style="position: relative; top: 25%; margin: auto; z-index: 2;">Coming Soon!</div>')
+}
+
+
 function getDeviceSize(screenSize) {
   let deviceSize = "";
 
@@ -93,4 +110,9 @@ $(document).ready(function() {
   let screenSize = $(window).width();
   let deviceSize = getDeviceSize(screenSize);
   createBackground(deviceSize);
+  $('.coming-soon').each(function (index, item) {
+    console.log("found a coming soon div");
+    comingSoon(item);
+  });
+
 });
