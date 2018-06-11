@@ -1,5 +1,5 @@
 let colors = ["gray", "primary", "secondary1", "secondary2"];
-let current_width = 0;
+let currentScreenSize = 0;
 
 function createBackground(deviceSize) {
   let current = 0;
@@ -52,7 +52,7 @@ function createBackground(deviceSize) {
     }
     prev_color = color;
 
-    $('.background').append('<div class="square ' + color + '" ' + style + '></div>');
+    $('.title-background').append('<div class="square ' + color + '" ' + style + '></div>');
   }
 }
 
@@ -60,9 +60,7 @@ function comingSoon(parent) {
   let colors = ["gray", "primary", "secondary1", "secondary2"];
 
   for (let i = 0; i < 4; i++) {
-    let index = Math.floor(Math.random() * colors.length);
-    let color = colors.splice(index, 1);
-    console.log(color);
+    let color = colors.splice(Math.floor(Math.random() * colors.length), 1);
     let left = (i%2) * 50;
     let top = Math.floor(i/2) * 50;
     let style = 'style="position: absolute; width: 50%; height: 50%; left: ' + left + '%; top: ' + top + '%; z-index: 1;"'; 
@@ -74,34 +72,29 @@ function comingSoon(parent) {
 
 
 function getDeviceSize(screenSize) {
-  let deviceSize = "";
-
   if (screenSize < 576) {
-    deviceSize = "xs";
+    return "xs";
   }
   else if (screenSize < 768) {
-    deviceSize = "sm";
+    return "sm";
   }
   else if (screenSize < 992) {
-    deviceSize = "md";
+    return "md";
   }
   else if (screenSize < 1200) {
-    deviceSize = "lg";
+    return "lg";
   }
   else {
-    deviceSize = "xl";
+    return "xl";
   }
-
-  return deviceSize;
 }
 
 $(window).on('resize', function() {
-  let win = $(this);
-  let screenSize = win.width();
+  let screenSize = $(this).width();
   let deviceSize = getDeviceSize(screenSize);
-  if (current_width != screenSize) {
-    current_width = screenSize;
-    $('.background').empty();
+  if (currentScreenSize != screenSize) {
+    currentScreenSize = screenSize;
+    $('.title-background').empty();
     createBackground(deviceSize);
   }
 });
@@ -111,7 +104,6 @@ $(document).ready(function() {
   let deviceSize = getDeviceSize(screenSize);
   createBackground(deviceSize);
   $('.coming-soon').each(function (index, item) {
-    console.log("found a coming soon div");
     comingSoon(item);
   });
 
