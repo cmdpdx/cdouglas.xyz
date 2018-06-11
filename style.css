@@ -1,3 +1,11 @@
+:root {
+  --gray: hsl(0, 0%, 30%);
+  --primary: 	hsl(0, 100%, 50%);
+  --secondary1: hsl(211, 100%, 50%);
+  --secondary2: hsl(149, 100%, 50%);
+}
+
+
 body {
   font-family: 'Rubik', sans-serif;
 }
@@ -36,7 +44,7 @@ footer a:hover {
   text-decoration: underline;
 }
 
-.background {
+.title-background {
   position: relative;
   width: 0px;
   height: 100%;
@@ -61,31 +69,65 @@ footer a:hover {
     }
 }
 
+.cmd-btn-secondary1 {
+  background-color: var(--secondary1);
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.25s linear;
+  -o-transition: background-color 0.25s linear;
+  -ms-transition: background-color 0.25s linear;
+  -moz-transition: background-color 0.25s linear;
+  -webkit-transition: background-color 0.25s linear;
+}
+
+.cmd-btn-secondary1:hover {
+  background-color: hsl(211, 100%, 35%);
+  color: white;
+}
+
+    
+.cmd-btn-gray {
+  background-color: var(--gray);
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.25s linear;
+  -o-transition: background-color 0.25s linear;
+  -ms-transition: background-color 0.25s linear;
+  -moz-transition: background-color 0.25s linear;
+  -webkit-transition: background-color 0.25s linear;
+}
+
+.cmd-btn-gray:hover {
+  background-color: hsl(0, 0%, 15%);
+  color: white;
+}
+
+
 .square {
   position: absolute;
 
 }
 
 .gray {
-  background-color: #444;
+  background-color: var(--gray);
 }
 
 .primary {
-  background-color: #ff0000;
+  background-color: var(--primary);
 }
 
 .primary-text {
-  color: #ff0000;
+  color: var(--primary);
 }
 
 .secondary1 {
-  background-color: #007dff;
+  background-color: var(--secondary1);
 }
 
 .secondary1-text {
-  color: #007dff;
+  color: var(--secondary1);
 }
 
 .secondary2 {
-  background-color: #00ff7d;
+  background-color: var(--secondary2);
 }
