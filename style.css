@@ -28,11 +28,24 @@ nav a:hover {
   text-decoration: none;
 }
 
-nav {
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  transition: all 0.5s;
+.cursor {
+  -webkit-animation: blink 1.25s infinite;
+  -moz-animation: blink 1.25s infinite;
+  -o-animation: blink 1.25s infinite;
+  animation: blink 1.25s infinite;
+
+  background-color: #aaa;
+  color: #aaa;
+  height: 100%;
+  margin: 2px;
+  opacity: 0.75;
+  display: inline;
 }
+
+@-webkit-keyframes blink { 50% { opacity:0.05; } }
+@-moz-keyframes blink { 50% { opacity:0.05; } }
+@-o-keyframes blink { 50% { opacity:0.05; } }
+@keyframes blink { 50% { opacity:0.05; } }
 
 footer a {
   color: white;
