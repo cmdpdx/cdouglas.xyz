@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+
+# Virtual environment
+venv/
+
+# Submlime text project files
+*.sublime-project
+*.sublime-workspace
+
+# SQLite DB
+cdouglas.db
+
+# Environment 
+.env
+.flaskenv
