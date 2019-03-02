@@ -16,5 +16,8 @@ cdouglas.db
 .flaskenv
 
 # Migration files, but don't ignore the actual migration scripts
-migrations/
+migrations/*
 !migrations/versions/
+
+# Logs
+logs/

@@ -6,6 +6,11 @@
     <meta charset="utf-8">
 {% endblock %}
 
+{% block styles %}
+{{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
 {% block title %}{% if title %}{{ title }} ->{% endif %} cdouglas.xyz{% endblock %}
 
 {% block navbar %}
