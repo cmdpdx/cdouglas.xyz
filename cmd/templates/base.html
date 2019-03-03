@@ -8,7 +8,9 @@
 
 {% block styles %}
 {{ super() }}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 {% endblock %}
 
 {% block title %}{% if title %}{{ title }} ->{% endif %} cdouglas.xyz{% endblock %}
@@ -34,6 +36,9 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">{{ _('About') }}</a></li>
+                    <li><a href="https://github.com/cmdpdx" aria-label="Github profile">
+                        <i class="fab fa-github" title="Github profile" aria-hidden="true"></i>
+                    </a></li>
                     {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('auth.logout') }}"><b>***</b></a></li>
                     {% endif %}
@@ -47,13 +52,18 @@
 {% block content %}
 
     <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+        <div class="row">
+            <div class="col" id="message_box">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            </div>
+        </div>
+
 
         {% block app_content %}{% endblock %}
     </div>

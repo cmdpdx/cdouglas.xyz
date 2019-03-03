@@ -10,6 +10,7 @@ class Config(object):
     APP_NAME = 'cdouglas.xyz'
     BLOG_TITLE = 'Read the Documentation'
     BLOG_DESCRIPTION = 'A blog about learning new things.'
+    LOG_TO_STDOUT = False
 
     # Flask configurations
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'this-issomelong#sentence'

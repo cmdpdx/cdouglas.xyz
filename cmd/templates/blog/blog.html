@@ -2,7 +2,7 @@
 
 {% block app_content %}
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             <h1>{{ title }}</h1>
             <p>{{ description }}</p>
             {% if current_user.is_authenticated %}
@@ -13,12 +13,28 @@
             <nav aria-label="Previous and next page navigation">
                 <ul class="pagination">
                     <li class="page-item{% if not next_url %} disabled{% endif %}">
-                        {% if not next_url %}<span class="page-link">Next post</span>
-                        {% else %}<a class="page-link" href="{{ next_url }}">Next post</a>{% endif %}
+                        {% if not next_url %}
+                        <span class="page-link">
+                            <i aria-hidden="true" class="fas fa-angle-left"></i> Next post
+                        </span>
+                        {% else %}
+                        <a class="page-link" href="{{ next_url }}">
+                            <i aria-hidden="true" class="fas fa-angle-left"></i> Next post
+                        </a>
+                        {% endif %}
                     </li>
                     <li class="page-item{% if not prev_url %} disabled{% endif %}">
-                        {% if not prev_url %}<span class="page-link">Previous post</span>
-                        {% else %}<a class="page-link" href="{{ prev_url }}">Previous post</a>{% endif %}
+                        {% if not prev_url %}
+                        <span class="page-link">
+                            Previous post 
+                            <i aria-hidden="true" class="fas fa-angle-right"></i>
+                        </span>
+                        {% else %}
+                        <a class="page-link" href="{{ prev_url }}">
+                            Previous post 
+                            <i aria-hidden="true" class="fas fa-angle-right"></i>
+                        </a>
+                        {% endif %}
                     </li>
                 </ul>
             </nav>
@@ -32,7 +48,7 @@
             {% endif %}
         </div>
     
-        <div class="col-sm-9">
+        <div class="col-md-9">
             {% if post %}
             <h1>
                 {{ post.title }}
