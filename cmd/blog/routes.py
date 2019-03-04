@@ -139,7 +139,7 @@ def save_post():
             body=request.form.get('body', '', type=str),
             public=request.form.get('public', False, type=bool))
         
-    return jsonify(result='Post saved.')
+    return jsonify(succes=True, message='Post saved.', post_id=post_id)
 
 @bp.route('/delete_post', methods=['POST'])
 @login_required

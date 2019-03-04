@@ -3,8 +3,63 @@
 {% block app_content %}
 
     <div class="row">
-        <div class="col-md-8">
-            <h1>Home page</h1>
+        <div class="jumbotron">
+            <h1><i class="fas fa-adjust"></i> Colin Douglas</h1>
+            <p>Teacher // Developer <br \></p>
+            <p>
+                <a class="btn btn-default btn-lg" href="{{ url_for('blog.main') }}">Read the blog</a>
+                <a class="btn btn-default btn-lg" href="#">Example projects</a>
+            </p>
+        </div>
+    </div>
+    <div class="row row-about">
+        <div class="col-sm-1 hidden-xs">
+            <div class="center-block"><i class="fas fa-glasses fa-3x" title="About Colin" aria-hidden="true"></i></div>
+        </div>
+        <div class="col-sm-11">
+            <h2>About Colin</h2>
+            <p>Here is some information about Colin</p>
+        </div>
+    </div>
+    <div class="row row-about">
+        <div class="col-sm-1 hidden-xs">
+            <div class="center-block"><i class="fas fa-file-code fa-3x" title="About Site" aria-hidden="true"></i></div>
+        </div>
+        <div class="col-sm-11">
+            <h2>About this site</h2>
+            <p>Here is some information about how this site was made</p>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <img class="icon" src="{{ url_for('static', filename='bootstrap-solid.svg') }}">
+                     Styled with <a href="https://getbootstrap.com" target="_blank">Bootstrap 3.3.7</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="fab fa-js" aria-hidden="true"></i> Asynchronous updates
+                    with <a href="https://jquery.com/" target="_blank">jQuery</a>
+                </li>
+                <li class="list-group-item">
+                    <p><i class="fas fa-flask" aria-hidden="true"></i> Backend built with
+                        <a href="https://palletsprojects.com/p/flask/" target="_blank">Flask</a>...</p>
+                    <p>... and
+                        <a href="http://flask-sqlalchemy.pocoo.org/2.3/" target="_blank">flask-sqlalchemy</a>,
+                        <a href="https://flask-login.readthedocs.io/en/latest/" target="_blank">flask-login</a>,
+                        <a href="https://flask-migrate.readthedocs.io/en/latest/" target="_blank">flask-migrate</a>,
+                        <a href="https://pythonhosted.org/Flask-Bootstrap/" target="_blank">flask-bootstrap</a>,
+                        <a href="https://pypi.org/project/Flask-Moment/" target="_blank">flask-moment</a>.
+                    </p>
+                </li>
+                <li class="list-group-item">
+                    <i class="fab fa-python" aria-hidden="true"></i> <a href="https://www.python.org" 
+                    target="_blank">Python 3.7</a>
+                </li>
+                <li class="list-group-item">
+                    <i class="fab fa-ubuntu" aria-hidden="true"></i> Ubuntu 16.04, MySQL, WEBSERVER
+                </li>
+                <li class="list-group-item">
+                    <i class="fab fa-digital-ocean" aria-hidden="true"></i>
+                    Hosting on <a href="https://www.digitalocean.com" target="_blank">Digital Ocean</a>
+                </li>
+            </ul>
         </div>
     </div>
 

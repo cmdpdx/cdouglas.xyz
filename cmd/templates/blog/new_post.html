@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <input class="btn btn-default" type="submit" name="submit" value="Save" id="btn_save">
                     <input class="btn btn-default" type="submit" name="submit" value="Post">
-                    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#modal_delete" id="btn_delete">Delete</button>
+                    <button class="btn btn-danger pull-right{% if not form.id_.data %} disabled{% endif %}" type="button" data-toggle="{% if form.id_.data %}modal{% endif %}" data-target="#modal_delete" id="btn_delete">Delete</button>
                 </div>
             </form>
         </div>
@@ -65,13 +65,16 @@
                 url: {{ url_for('blog.save_post')|tojson }},
                 data: $('#post_form').serialize()
             }).done(function (data) {
-                $('#message_box').append('<div class="alert alert-info" role="alert">' + data.result + '</div>')
+                $('#message_box').append('<div class="alert alert-info" role="alert">' + data.message + '</div>');
+                // Enable the delete button
+                $('#id_').val(data.post_id);
+                $('#btn_delete').removeClass('disabled');
+                $('#btn_delete').attr('data-toggle', 'modal');
             });
         }
 
         function deletePost(event) {
-            console.log('deleting post ' + $('#id_').attr('value'));
-            $.post({{ url_for('blog.delete_post')|tojson }}, {'post_id': $('#id_').attr('value')}, function(data) {
+            $.post({{ url_for('blog.delete_post')|tojson }}, {'post_id': $('#id_').val()}, function(data) {
                 window.location.replace(data);
             });
             $('#modal_delete').modal('hide')

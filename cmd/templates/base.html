@@ -9,14 +9,14 @@
 {% block styles %}
 {{ super() }}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
 
 {% endblock %}
 
 {% block title %}{% if title %}{{ title }} ->{% endif %} cdouglas.xyz{% endblock %}
 
 {% block navbar %}
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#cd-navbar-collapse" aria-expanded="false">
@@ -25,19 +25,18 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('main.index') }}">cdouglas.xyz</a>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}"><i class="fas fa-adjust fa-lg" title="CD" aria-hidden="true"></i></a>
             </div>
 
             <div class="collapse navbar-collapse" id="cd-navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('blog.main') }}">{{ g.blog_title }} (blog)</a></li>
+                    <li><a href="{{ url_for('blog.main') }}"><em>{{ g.blog_title }}</em></a></li>
                     <li><a href="#">{{ _('Projects') }}</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">{{ _('About') }}</a></li>
                     <li><a href="https://github.com/cmdpdx" aria-label="Github profile">
-                        <i class="fab fa-github" title="Github profile" aria-hidden="true"></i>
+                        <i class="fab fa-github fa-lg" title="Github profile" aria-hidden="true"></i>
                     </a></li>
                     {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('auth.logout') }}"><b>***</b></a></li>
@@ -51,7 +50,7 @@
 
 {% block content %}
 
-    <div class="container">
+    <div class="container" id="main">
         <div class="row">
             <div class="col" id="message_box">
             {% with messages = get_flashed_messages() %}
@@ -66,6 +65,19 @@
 
 
         {% block app_content %}{% endblock %}
+    </div>
+
+    <div class="container-fluid">
+        <div class="row footer">
+            <div class="col-xs-10">
+                <p><span class="footer-text">Site created by Colin Douglas</span>//
+                    <span class="footer-text"><a href="mailto:cdouglas.xyz@gmail.com">
+                        <i class="fas fa-envelope" aria-hidden="true"></i> Contact</a></span>//
+                    <span class="footer-text">View the <a href="https://github.com/cmdpdx/cdouglas.xyz"
+                     target="_blank">source code</a></span>
+                </p> 
+            </div>
+        </div>
     </div>
 
 {% endblock %}

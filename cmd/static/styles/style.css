@@ -1,0 +1,82 @@
+html { height: 100%; }
+body {
+    height: 100%;
+    padding-top: 70px;
+}
+
+a:link, a:visited {
+    color: hsl(0, 100%, 50%);
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    color: #000;
+    text-decoration: underline;
+}
+
+.navbar {
+    background-color: #fff;
+    border-bottom: 3px solid #555;
+}
+
+.navbar a {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+#main {
+    min-height: 100%;
+}
+
+.jumbotron {
+    background-color: #555;
+}
+
+.jumbotron h1, .jumbotron p {
+    color: #fff;
+}
+
+.jumbotron .btn {
+    color: #555;
+}
+.jumbotron .btn:hover {
+    background-color: #555;
+    border-color: #000;
+    color: #fff;
+}
+
+.row-about {
+    border: 2px solid #555;
+    border-radius: 0.5em;
+    padding: 10px;
+    margin-bottom: 1em;
+}
+
+.row-about .list-group-item {
+    font-size: 1.3em;
+    border: 0px;
+}
+
+.row-about .icon {
+    height: 1em;
+}
+
+.footer {
+    background-color: #555;
+    color: #fff;
+}
+
+.footer div p {
+    margin: 10px;
+    padding: 5px;
+    font-size: 1.25em;
+}
+
+.footer div a:hover, .footer div a:active {
+    color: #fff;
+}
+
+.footer-text {
+    margin-left: 20px;
+    margin-right: 20px;
+}
