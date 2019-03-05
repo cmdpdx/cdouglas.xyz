@@ -8,7 +8,7 @@
             <p>Teacher // Developer <br \></p>
             <p>
                 <a class="btn btn-default btn-lg" href="{{ url_for('blog.main') }}">Read the blog</a>
-                <a class="btn btn-default btn-lg" href="#">Example projects</a>
+                <a class="btn btn-default btn-lg" href="#" id="projects_btn">Example projects</a>
             </p>
         </div>
     </div>
@@ -31,11 +31,15 @@
             <ul class="list-group">
                 <li class="list-group-item">
                     <img class="icon" src="{{ url_for('static', filename='bootstrap-solid.svg') }}">
-                     Styled with <a href="https://getbootstrap.com" target="_blank">Bootstrap 3.3.7</a>
+                     Styled with <a href="https://getbootstrap.com" target="_blank">Bootstrap 3.3.7</a>.
                 </li>
                 <li class="list-group-item">
-                    <i class="fab fa-js" aria-hidden="true"></i> Asynchronous updates
-                    with <a href="https://jquery.com/" target="_blank">jQuery</a>
+                    <i class="fab fa-font-awesome-flag" aria-hidden="true"></i> And generous usage of 
+                    <a href="https://fontawesome.com/" target="_blank">Font Awesome</a> icons.
+                </li>
+                <li class="list-group-item">
+                    <i class="fab fa-js" aria-hidden="true"></i> Dynamic styling and asynchronous updates
+                    with <a href="https://jquery.com/" target="_blank">jQuery</a>.
                 </li>
                 <li class="list-group-item">
                     <p><i class="fas fa-flask" aria-hidden="true"></i> Backend built with
@@ -47,20 +51,49 @@
                         <a href="https://pythonhosted.org/Flask-Bootstrap/" target="_blank">flask-bootstrap</a>,
                         <a href="https://pypi.org/project/Flask-Moment/" target="_blank">flask-moment</a>.
                     </p>
+                    <p>... and the knowledge gained from this excellent blog series:
+                        <a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world"
+                        target="_blank">The Flask Mega-Tutorial</a> by Miguel Grinberg.
+                    </p> 
                 </li>
                 <li class="list-group-item">
                     <i class="fab fa-python" aria-hidden="true"></i> <a href="https://www.python.org" 
-                    target="_blank">Python 3.7</a>
+                    target="_blank">Python 3.7.2</a>.
                 </li>
                 <li class="list-group-item">
                     <i class="fab fa-ubuntu" aria-hidden="true"></i> Ubuntu 16.04, MySQL, WEBSERVER
                 </li>
                 <li class="list-group-item">
                     <i class="fab fa-digital-ocean" aria-hidden="true"></i>
-                    Hosting on <a href="https://www.digitalocean.com" target="_blank">Digital Ocean</a>
+                    Hosting on <a href="https://www.digitalocean.com" target="_blank">Digital Ocean</a>.
                 </li>
             </ul>
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script>
+        $(function(){
+            // Disable the project button for now, display message instead
+            var button = $('#projects_btn');
+            button.hover(
+                function(event) {
+                    var elem = $(event.currentTarget);
+                    var width = elem.width();
+                    elem.text('Coming soon');
+                    elem.width(width);
+                },
+                function(event) {
+                    var elem = $(event.currentTarget);
+                    elem.text('Example projects');
+                });
+            button.click(
+                function(event) {
+                    event.preventDefault();
+                });
+        });
+    </script>
 {% endblock %}

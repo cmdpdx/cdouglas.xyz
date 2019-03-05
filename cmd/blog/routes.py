@@ -2,46 +2,14 @@ import html
 from markdown import markdown
 
 from flask import render_template, flash, redirect, url_for, request,\
-    current_app, g, jsonify
+    current_app, g, jsonify, abort
 from flask_login import login_required, current_user
 
 from cmd import db
-from cmd.models import User, Post
+from cmd.models import User, Post, SimpleTitle
 from cmd.blog import bp
 from cmd.blog.forms import PostForm
-
-def generate_post_list():
-    """Create list of recent blog posts and store in Flask global g."""
-    g.post_list = []
-    posts = db.session.query(Post.id, Post.title).order_by(Post.timestamp.desc())
-    if not current_user.is_authenticated:
-        posts = posts.filter_by(public=True)
-    g.post_list = posts.all()[:]
-
-def create_post(title, body, public):
-    """Create a new Post and return the new id."""
-    post = Post(
-        title=title, 
-        body=body, 
-        public=public,
-        author=current_user
-    )
-    db.session.add(post)
-    db.session.commit()
-    current_app.logger.info(f'{current_user.username} CREATED post id={post.id}, title={post.title}')
-    return post.id
-
-def update_post(post_id, title, body, public):
-    """Update an exisiting Post, return False if post isn't found"""
-    post = Post.query.get(post_id)
-    if not post:
-        return False
-    post.title = title
-    post.body = body
-    post.public = public
-    db.session.commit()
-    current_app.logger.info(f'{current_user.username} UPDATED post id={post.id}, title={post.title}')
-    return True
+from cmd.blog.helpers import generate_post_list, create_post, update_post
 
 
 @bp.route('/')
@@ -58,26 +26,15 @@ def main():
         post = post.first()
 
         # Get second most recent public post (admin gets non-public)
-        prev = Post.query.order_by(Post.timestamp.desc()).filter(Post.id < post.id)
-        if not current_user.is_authenticated:
-            prev = prev.filter_by(public=True)
-        prev = prev.first()
-        prev_url = url_for('.main', post=prev.id) if prev else None    
+        prev_url = get_prev_url(post)   
     else:
         post = Post.query.get(post_id)
         if not post or (not post.public and not current_user.is_authenticated):
             return redirect(url_for('.main'))
 
         # Generate URLs for previous and next posts
-        prev = Post.query.order_by(Post.timestamp.desc()).filter(Post.id < post_id)
-        next_ = Post.query.order_by(Post.timestamp.asc()).filter(Post.id > post_id)
-        if not current_user.is_authenticated:
-            prev = prev.filter_by(public=True)
-            next_ = next_.filter_by(public=True)
-        prev = prev.first()
-        next_ = next_.first()
-        prev_url = url_for('.main', post=prev.id) if prev else None
-        next_url = url_for('.main', post=next_.id) if next_ else None
+        prev_url = get_prev_url(post)
+        next_url = get_next_url(post)
 
     # Convert the markdown in the blog body to HTML before rendering template
     post.body = markdown(post.body)
@@ -89,6 +46,27 @@ def main():
         prev_url=prev_url,
         next_url=next_url
     )
+
+@bp.route('/t/<simple_title>')
+def by_title(simple_title):
+    generate_post_list()
+    st = SimpleTitle.query.filter_by(text=simple_title).first_or_404()
+    post = st.post
+    if not post.public and not current_user.is_authenticated:
+        return abort(404)
+
+    prev_url = get_prev_url(post)
+    next_url = get_next_url(post) 
+    post.body = markdown(post.body)
+    return render_template(
+        'blog/blog.html', 
+        title=current_app.config['BLOG_TITLE'], 
+        description=current_app.config['BLOG_DESCRIPTION'],
+        post=post,
+        prev_url=prev_url,
+        next_url=next_url
+    )    
+
 
 @bp.route('/new_post', methods=['GET', 'POST'])
 @login_required

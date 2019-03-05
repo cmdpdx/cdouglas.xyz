@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block app_content %}
-    <div class="row">
+    <div class="row blog-header">
         <div class="col-xs-12">
             <h1>{{ title }}</h1> 
             <p>{{ description }}
@@ -9,7 +9,6 @@
             <a class="btn btn-default" href="{{ url_for('blog.new_post') }}">New post.</a>
             {% endif %}
             </p>
-            <hr>
         </div>
     </div>
     <div class="row">
@@ -46,38 +45,19 @@
             {% endif %}
         </div>
 
-        <div class="col-md-3 col-md-pull-9"
-            <nav aria-label="Previous and next page navigation">
-                <ul class="pagination">
-                    <li class="page-item{% if not next_url %} disabled{% endif %}">
-                        {% if not next_url %}
-                        <span class="page-link">
-                            <i aria-hidden="true" class="fas fa-angle-left"></i> Next post
-                        </span>
-                        {% else %}
-                        <a class="page-link" href="{{ next_url }}">
-                            <i aria-hidden="true" class="fas fa-angle-left"></i> Next post
-                        </a>
-                        {% endif %}
-                    </li>
-                    <li class="page-item{% if not prev_url %} disabled{% endif %}">
-                        {% if not prev_url %}
-                        <span class="page-link">
-                            Previous post 
-                            <i aria-hidden="true" class="fas fa-angle-right"></i>
-                        </span>
-                        {% else %}
-                        <a class="page-link" href="{{ prev_url }}">
-                            Previous post 
-                            <i aria-hidden="true" class="fas fa-angle-right"></i>
-                        </a>
-                        {% endif %}
-                    </li>
-                </ul>
-            </nav>
+        <div class="col-md-3 col-md-pull-9">
+            <div aria-label="Previous and next page navigation" class="prev-next-buttons">
+                <a class="btn btn-default{% if not next_url %} disabled{% endif %}" href="{{ next_url }}">
+                    <i aria-hidden="true" class="fas fa-angle-left"></i> Next
+                </a>
+                <a class="btn btn-default{% if not prev_url %} disabled{% endif %}" href="{{ prev_url }}">
+                    Previous <i aria-hidden="true" class="fas fa-angle-right"></i>
+                </a>
+            </div>
+
             {% if g.post_list %}
             <h4>Past posts</h4>
-            <div class="list-group">
+            <div class="list-group blog-past-posts">
                 {% for p in g.post_list %}
                 <a href="{{ url_for('blog.main', post=p.id) }}" class="list-group-item">{{ p.title }}</a>
                 {% endfor %}

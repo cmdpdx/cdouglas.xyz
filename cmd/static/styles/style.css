@@ -80,3 +80,28 @@ a:hover, a:active {
     margin-left: 20px;
     margin-right: 20px;
 }
+
+.blog-header {
+    border-bottom: 2px solid #555;
+}
+
+.blog-header p {
+    font-size: 1.25em;
+}
+
+.blog-past-posts .list-group-item {
+    border: 0px;
+}
+
+.prev-next-buttons {
+    padding: 10px;
+}
+
+.prev-next-buttons .btn {
+    color: #555;
+}
+.prev-next-buttons .btn:hover {
+    background-color: #555;
+    border-color: #000;
+    color: #fff;
+}
