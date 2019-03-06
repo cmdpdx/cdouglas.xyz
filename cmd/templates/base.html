@@ -38,6 +38,9 @@
                     <li><a href="https://github.com/cmdpdx" aria-label="Github profile">
                         <i class="fab fa-github fa-lg" title="Github profile" aria-hidden="true"></i>
                     </a></li>
+                    <li><a href="mailto:{{ g.contact_email }}" aria-label="Email">
+                        <i class="fas fa-envelope fa-lg" title="Email" aria-hidden="true"></i>
+                    </a></li>
                     {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('auth.logout') }}"><b>***</b></a></li>
                     {% endif %}
@@ -71,7 +74,7 @@
         <div class="row footer">
             <div class="col-xs-10">
                 <p><span class="footer-text">Site created by Colin Douglas</span>//
-                    <span class="footer-text"><a href="mailto:cdouglas.xyz@gmail.com">
+                    <span class="footer-text"><a href="mailto:{{ g.contact_email }}">
                         <i class="fas fa-envelope" aria-hidden="true"></i> Contact</a></span>//
                     <span class="footer-text">View the <a href="https://github.com/cmdpdx/cdouglas.xyz"
                      target="_blank">source code</a></span>

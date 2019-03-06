@@ -17,9 +17,9 @@
             <h2 class="blog-title">
                 {{ post.title }}
                 {% if current_user.is_authenticated %}
-                    {% if post.public %}<span class="label label-success">Public</span>
+                    <span class="h3">{% if post.public %}<span class="label label-success">Public</span>
                     {% else %}<span class="label label-danger">Not public</span>
-                    {% endif %}
+                    {% endif %}</span>
                 {% endif %}
             </h2>
             <p class="text-muted blog-byline">
@@ -58,8 +58,8 @@
             {% if g.post_list %}
             <h4>Past posts</h4>
             <div class="list-group blog-past-posts">
-                {% for p in g.post_list %}
-                <a href="{{ url_for('blog.main', post=p.id) }}" class="list-group-item">{{ p.title }}</a>
+                {% for post in g.post_list %}
+                <a href="{{ post.url }}" class="list-group-item">{{ post.title }}</a>
                 {% endfor %}
             </div>
             {% endif %}

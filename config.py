@@ -11,6 +11,7 @@ class Config(object):
     BLOG_TITLE = 'Read the Documentation'
     BLOG_DESCRIPTION = 'A blog about learning new things.'
     LOG_TO_STDOUT = False
+    CONTACT_EMAIL = 'cdouglas.xyz@gmail.com'
 
     # Flask configurations
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'this-issomelong#sentence'

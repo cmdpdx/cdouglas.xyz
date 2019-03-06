@@ -5,7 +5,7 @@ body {
 }
 
 a:link, a:visited {
-    color: hsl(0, 100%, 50%);
+    color: hsl(211, 100%, 60%);
     text-decoration: none;
 }
 
@@ -70,6 +70,7 @@ a:hover, a:active {
     margin: 10px;
     padding: 5px;
     font-size: 1.25em;
+    font-weight: bold;
 }
 
 .footer div a:hover, .footer div a:active {
@@ -91,6 +92,10 @@ a:hover, a:active {
 
 .blog-past-posts .list-group-item {
     border: 0px;
+}
+
+.blog-past-posts .list-group-item:hover {
+    background-color: hsl(211, 100%, 97%);
 }
 
 .prev-next-buttons {

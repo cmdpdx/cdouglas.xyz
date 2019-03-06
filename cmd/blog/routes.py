@@ -9,32 +9,20 @@ from cmd import db
 from cmd.models import User, Post, SimpleTitle
 from cmd.blog import bp
 from cmd.blog.forms import PostForm
-from cmd.blog.helpers import generate_post_list, create_post, update_post
+from cmd.blog.helpers import *
 
 
 @bp.route('/')
 def main():
+    """Main blog page; render the most recent post."""
+
     generate_post_list()
-    post_id = request.args.get('post', 0, type=int)
-    next_url, prev_url, post = None, None, None
-    # If no 'post; query string passed, show most recent entry
-    if not post_id:
-        # Get most recent public post (admin gets non-public)
-        post = Post.query.order_by(Post.timestamp.desc())
-        if not current_user.is_authenticated:
-            post = post.filter_by(public=True)
-        post = post.first()
-
-        # Get second most recent public post (admin gets non-public)
-        prev_url = get_prev_url(post)   
-    else:
-        post = Post.query.get(post_id)
-        if not post or (not post.public and not current_user.is_authenticated):
-            return redirect(url_for('.main'))
-
-        # Generate URLs for previous and next posts
-        prev_url = get_prev_url(post)
-        next_url = get_next_url(post)
+    post = Post.query.order_by(Post.timestamp.desc())
+    if not current_user.is_authenticated:
+        post = post.filter_by(public=True)
+    post = post.first()
+    prev_url = get_prev_url(post)
+    next_url = None
 
     # Convert the markdown in the blog body to HTML before rendering template
     post.body = markdown(post.body)
@@ -47,8 +35,11 @@ def main():
         next_url=next_url
     )
 
-@bp.route('/t/<simple_title>')
+
+@bp.route('/<simple_title>')
 def by_title(simple_title):
+    """Retrieve a post by its simple title and render it."""
+
     generate_post_list()
     st = SimpleTitle.query.filter_by(text=simple_title).first_or_404()
     post = st.post
@@ -71,6 +62,8 @@ def by_title(simple_title):
 @bp.route('/new_post', methods=['GET', 'POST'])
 @login_required
 def new_post():
+    """Create a new post or edit an existing post."""
+
     form = PostForm()
     page_title = 'New post'
     post_id = request.args.get('post_id', 0, type=int)
@@ -124,10 +117,11 @@ def save_post():
 def delete_post():
     post_id = request.form.get('post_id', 0, type=int)
     if post_id:  
-        post = Post.query.get(post_id)
-        if post:
-            current_app.logger.info(f'{current_user.username} DELETED post id={post_id}, title={post.title}')
-            db.session.delete(post)
-            db.session.commit()
-            flash('Post deleted')
+        post = Post.query.filter_by(id=post_id).first_or_404()
+        st = post.simple_title
+        current_app.logger.info(f'{current_user.username} DELETED post id={post_id}, title={post.title}')
+        db.session.delete(st)
+        db.session.delete(post)
+        db.session.commit()
+        flash('Post deleted')
     return url_for('blog.main')

@@ -1,28 +1,39 @@
-from flask import g, current_app
+from collections import namedtuple
+
+from flask import g, current_app, url_for
 from flask_login import current_user
 
 from cmd import db
-from cmd.models import Post
+from cmd.models import Post, SimpleTitle
 
 
 def generate_post_list():
     """Create list of recent blog posts and store in Flask global g."""
     g.post_list = []
-    # TODO: also fetch simple title (join?)
-    posts = db.session.query(Post.id, Post.title).order_by(Post.timestamp.desc())
+    PostInfo = namedtuple('PostInfo', ['title', 'timestamp', 'url'])
+    posts = Post.query.order_by(Post.timestamp.desc())
     if not current_user.is_authenticated:
         posts = posts.filter_by(public=True)
-    g.post_list = posts.all()[:]
+
+    for post in posts.all():
+        g.post_list.append(PostInfo(
+            title=post.title,
+            timestamp=post.timestamp,
+            url=url_for('blog.by_title', simple_title=post.simple_title.text)
+        ))
 
 def create_post(title, body, public):
     """Create a new Post and return the new id."""
     post = Post(
-        title=title, 
+        title=title,
         body=body, 
         public=public,
         author=current_user
     )
+    st = SimpleTitle(text=simplify_title(title), post=post)
+    
     db.session.add(post)
+    db.session.add(st)
     db.session.commit()
     current_app.logger.info(f'{current_user.username} CREATED post id={post.id}, title={post.title}')
     return post.id
@@ -33,6 +44,7 @@ def update_post(post_id, title, body, public):
     if not post:
         return False
     post.title = title
+    post.simple_title.text = simplify_title(title)
     post.body = body
     post.public = public
     db.session.commit()

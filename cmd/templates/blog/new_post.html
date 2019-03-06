@@ -28,7 +28,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <input class="btn btn-default" type="submit" name="submit" value="Save" id="btn_save">
+                    <button class="btn btn-default" type="button" id="btn_save">Save</button>
                     <input class="btn btn-default" type="submit" name="submit" value="Post">
                     <button class="btn btn-danger pull-right{% if not form.id_.data %} disabled{% endif %}" type="button" data-toggle="{% if form.id_.data %}modal{% endif %}" data-target="#modal_delete" id="btn_delete">Delete</button>
                 </div>
@@ -59,7 +59,6 @@
 {{ super() }}
     <script>
         function savePost(event) {
-            event.preventDefault();
             $.ajax({
                 method: 'POST',
                 url: {{ url_for('blog.save_post')|tojson }},
@@ -80,8 +79,11 @@
             $('#modal_delete').modal('hide')
         }
 
-        $('#modal_btn_delete').on('click', deletePost)
-        $('#btn_save').on('click', savePost)
+        // Page load
+        $(function() {
+            $('#modal_btn_delete').on('click', deletePost);
+            $('#btn_save').on('click', savePost);
+        });
 
     </script>
 {% endblock %}

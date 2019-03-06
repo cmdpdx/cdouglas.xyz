@@ -3,9 +3,9 @@
 {% block app_content %}
     <div class="row">
         <div class="col-md-8">
-            <h1>404</h1>
+            <h1><i class="far fa-frown fa-2x" aria-hidden="true"></i> 404</h1>
             <p>{{ _('Page not found.') }}</p>
-            <p><a href="{{ url_for('main.index') }}">{{ _('Return.') }}</a></p>
+            <p><a href="{{ url_for('main.index') }}">{{ _('Return home.') }}</a></p>
         </div>
     </div>
 {% endblock %}
