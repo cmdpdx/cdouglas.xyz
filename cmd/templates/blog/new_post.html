@@ -23,6 +23,10 @@
                     {{ form.body.label(class='control-label') }} 
                     {{ form.body(class='form-control', rows=15) }}
                 </div>
+                <div class="form-group">
+                    {{ form.tags.label(class='control-label') }}
+                    {{ form.tags(class='form-control')}}
+                </div>
                 <div class="checkbox">
                     <label>{{ form.public() }} {{ form.public.label.text }}</label>
                 </div>

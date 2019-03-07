@@ -6,16 +6,17 @@ from flask import render_template, flash, redirect, url_for, request,\
 from flask_login import login_required, current_user
 
 from cmd import db
-from cmd.models import User, Post, SimpleTitle
+from cmd.models import User, Post
 from cmd.blog import bp
 from cmd.blog.forms import PostForm
-from cmd.blog.helpers import *
+import cmd.blog.helpers
+from cmd.blog.helpers import get_prev_url, get_next_url, generate_post_list,\
+    create_post, update_post, simplify_title
 
 
 @bp.route('/')
 def main():
     """Main blog page; render the most recent post."""
-
     generate_post_list()
     post = Post.query.order_by(Post.timestamp.desc())
     if not current_user.is_authenticated:
@@ -23,8 +24,6 @@ def main():
     post = post.first()
     prev_url = get_prev_url(post)
     next_url = None
-
-    # Convert the markdown in the blog body to HTML before rendering template
     post.body = markdown(post.body)
     return render_template(
         'blog/blog.html', 
@@ -39,10 +38,8 @@ def main():
 @bp.route('/<simple_title>')
 def by_title(simple_title):
     """Retrieve a post by its simple title and render it."""
-
     generate_post_list()
-    st = SimpleTitle.query.filter_by(text=simple_title).first_or_404()
-    post = st.post
+    post = Post.query.filter_by(simple_title=simple_title).first_or_404()
     if not post.public and not current_user.is_authenticated:
         return abort(404)
 
@@ -63,7 +60,6 @@ def by_title(simple_title):
 @login_required
 def new_post():
     """Create a new post or edit an existing post."""
-
     form = PostForm()
     page_title = 'New post'
     post_id = request.args.get('post_id', 0, type=int)
@@ -71,22 +67,31 @@ def new_post():
     if form.validate_on_submit():
         # Edit of an exisiting post
         if post_id:
-            update_post(post_id, form.title.data, form.body.data, form.public.data)
+            update_post(
+                post_id=post_id, 
+                title=form.title.data, 
+                body=form.body.data, 
+                tags=form.tags.data,
+                public=form.public.data)
             flash('Post updated.')
         # New post
         else:
-            post_id = create_post(form.title.data, form.body.data, form.public.data)
+            post_id = create_post(
+                title=form.title.data, 
+                body=form.body.data, 
+                tags=form.tags.data,
+                public=form.public.data)
             flash('Post submitted.')
-
-        return redirect(url_for('.main', post=post_id))
+        return redirect(url_for('.by_title', simple_title=simplify_title(form.title.data)))
     # ...or, GET request to edit an existing post
     elif request.method == 'GET' and post_id:
-        post = Post.query.filter_by(id=post_id).first()
+        post = Post.query.get(post_id)
         if not post:
             return redirect(url_for('.main'))
         form.id_.data = post.id
         form.title.data = post.title
         form.body.data = post.body
+        form.tags.data = ', '.join(list(map(str, post.tags)))
         form.public.data = post.public
         page_title = 'Edit post'
 
@@ -101,6 +106,7 @@ def save_post():
         post_id = create_post(
             title=request.form.get('title', '', type=str),
             body=request.form.get('body', '', type=str),
+            tags=request.form.get('tags', '', type=str),
             public=request.form.get('public', False, type=bool))
     else:
         # update post
@@ -108,20 +114,16 @@ def save_post():
             post_id=post_id,
             title=request.form.get('title', '', type=str),
             body=request.form.get('body', '', type=str),
+            tags=request.form.get('tags', '', type=str),
             public=request.form.get('public', False, type=bool))
         
     return jsonify(succes=True, message='Post saved.', post_id=post_id)
 
 @bp.route('/delete_post', methods=['POST'])
 @login_required
+#TODO: change this function/view name to 'remove_post' to avoid conflict with helpers.delete_post
 def delete_post():
     post_id = request.form.get('post_id', 0, type=int)
-    if post_id:  
-        post = Post.query.filter_by(id=post_id).first_or_404()
-        st = post.simple_title
-        current_app.logger.info(f'{current_user.username} DELETED post id={post_id}, title={post.title}')
-        db.session.delete(st)
-        db.session.delete(post)
-        db.session.commit()
+    if post_id and cmd.blog.helpers.delete_post(post_id):        
         flash('Post deleted')
     return url_for('blog.main')

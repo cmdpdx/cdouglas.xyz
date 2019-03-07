@@ -23,27 +23,36 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.username}>'
 
-# TODO: Move Post and SimpleTitle into cmd.blog.models 
+
+tags = db.Table('tags',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True)
+)
+
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
-    simple_title = db.relationship('SimpleTitle', backref='post', lazy=True, uselist=False)
+    simple_title = db.Column(db.String(100), index=True, unique=True)
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     public = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    tags = db.relationship('Tag', secondary=tags, lazy='subquery', backref=db.backref('posts', lazy=True))
 
     def __repr__(self):
         return f'<Post {self.title}>'
 
 
-class SimpleTitle(db.Model):
+class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(100), index=True, nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    text = db.Column(db.String(64), index=True, unique=True, nullable=False)
+
+    def __str__(self):
+        return self.text
 
     def __repr__(self):
-        return f'<SimpleTitle {self.text}>'
+        return f'<Tag {self.text}>'
 
 
 @login.user_loader

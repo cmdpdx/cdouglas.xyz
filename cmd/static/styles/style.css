@@ -14,6 +14,10 @@ a:hover, a:active {
     text-decoration: underline;
 }
 
+code {
+    
+}
+
 .navbar {
     background-color: #fff;
     border-bottom: 3px solid #555;
@@ -90,11 +94,11 @@ a:hover, a:active {
     font-size: 1.25em;
 }
 
-.blog-past-posts .list-group-item {
+.blog-recent-posts .list-group-item {
     border: 0px;
 }
 
-.blog-past-posts .list-group-item:hover {
+.blog-recent-posts .list-group-item:hover {
     background-color: hsl(211, 100%, 97%);
 }
 
