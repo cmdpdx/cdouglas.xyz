@@ -6,6 +6,7 @@ from cmd.main import bp
 @bp.before_app_request
 def before_request():
     g.blog_title = current_app.config['BLOG_TITLE']
+    g.blog_description = current_app.config['BLOG_DESCRIPTION']
     g.contact_email = current_app.config['CONTACT_EMAIL']
     
 @bp.route('/')

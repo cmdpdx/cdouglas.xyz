@@ -1,0 +1,39 @@
+{% extends 'blog/blog_base.html' %}
+
+{% block blog_content %}
+    <div class="row">
+        <div class="col-md-9 col-md-push-3">
+            {% if post %}
+            {% include 'blog/_post_title.html' %}
+            <hr>
+            <p class="blog-body">
+                {{ post.body|safe }}
+            </p>
+            {% else %}
+            <p class="blog-body">No post to show.</p>
+            {% endif %}
+        </div>
+
+        <div class="col-md-3 col-md-pull-9">
+            <div aria-label="Previous and next page navigation" class="prev-next-buttons">
+                <a class="btn btn-default{% if not next_url %} disabled{% endif %}" href="{{ next_url }}">
+                    <i aria-hidden="true" class="fas fa-angle-left"></i> Next
+                </a>
+                <a class="btn btn-default{% if not prev_url %} disabled{% endif %}" href="{{ prev_url }}">
+                    Previous <i aria-hidden="true" class="fas fa-angle-right"></i>
+                </a>
+            </div>
+
+            {% if g.post_list %}
+            <h4>Recent posts</h4>
+            <div class="list-group blog-recent-posts">
+                {% for post in g.post_list %}
+                <a href="{{ post.url }}" class="list-group-item">{{ post.title }}</a>
+                {% endfor %}
+            </div>
+            <!-- <p><a href="{{ url_for('.all_posts') }}">See all posts</a></p> -->
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

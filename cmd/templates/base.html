@@ -42,7 +42,7 @@
                         <i class="fas fa-envelope fa-lg" title="Email" aria-hidden="true"></i>
                     </a></li>
                     {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('auth.logout') }}"><b>***</b></a></li>
+                    <li><a href="{{ url_for('auth.logout') }}"><b><i class="fas fa-sign-out-alt fa-lg"></i></b></a></li>
                     {% endif %}
                 </ul>
             </div>

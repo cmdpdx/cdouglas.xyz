@@ -1,11 +1,16 @@
+:root {
+    --main-color: hsl(211, 100%, 60%);
+}
+
 html { height: 100%; }
 body {
     height: 100%;
     padding-top: 70px;
+    font-size: 12pt;
 }
 
 a:link, a:visited {
-    color: hsl(211, 100%, 60%);
+    color: var(--main-color);
     text-decoration: none;
 }
 
@@ -16,6 +21,14 @@ a:hover, a:active {
 
 code {
     
+}
+
+.label-info {
+    background: var(--main-color);
+}
+
+.label-link:hover {
+    text-decoration: none;
 }
 
 .navbar {
@@ -29,7 +42,8 @@ code {
 }
 
 #main {
-    min-height: 100%;
+    min-height: 95%;
+    margin-bottom: 2em;
 }
 
 .jumbotron {
@@ -71,9 +85,8 @@ code {
 }
 
 .footer div p {
-    margin: 10px;
+    margin: 5px;
     padding: 5px;
-    font-size: 1.25em;
     font-weight: bold;
 }
 
@@ -84,6 +97,17 @@ code {
 .footer-text {
     margin-left: 20px;
     margin-right: 20px;
+}
+
+.blog-title {
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.timestamp {
+    color: #aaa;
+    border: 1px solid #aaa;
+    padding: 3px 6px;
 }
 
 .blog-header {
@@ -100,6 +124,16 @@ code {
 
 .blog-recent-posts .list-group-item:hover {
     background-color: hsl(211, 100%, 97%);
+}
+
+.blog-post-summary {
+    padding: 10px;
+    padding-bottom: 50px;
+    border: 1px solid #fff;
+}
+
+.blog-post-summary:hover {
+    border: 1px solid #aaa;
 }
 
 .prev-next-buttons {

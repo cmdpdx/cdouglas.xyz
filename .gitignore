@@ -9,7 +9,7 @@ venv/
 *.sublime-workspace
 
 # SQLite DB
-cdouglas.db
+*.db
 
 # Environment 
 .env

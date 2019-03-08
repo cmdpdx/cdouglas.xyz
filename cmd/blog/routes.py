@@ -6,7 +6,7 @@ from flask import render_template, flash, redirect, url_for, request,\
 from flask_login import login_required, current_user
 
 from cmd import db
-from cmd.models import User, Post
+from cmd.models import User, Post, Tag
 from cmd.blog import bp
 from cmd.blog.forms import PostForm
 import cmd.blog.helpers
@@ -26,7 +26,7 @@ def main():
     next_url = None
     post.body = markdown(post.body)
     return render_template(
-        'blog/blog.html', 
+        'blog/post.html', 
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
@@ -47,7 +47,7 @@ def by_title(simple_title):
     next_url = get_next_url(post) 
     post.body = markdown(post.body)
     return render_template(
-        'blog/blog.html', 
+        'blog/post.html', 
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
@@ -55,6 +55,16 @@ def by_title(simple_title):
         next_url=next_url
     )    
 
+@bp.route('/tag/<tag_text>')
+def tag_search(tag_text):
+    tag = Tag.query.filter_by(text=tag_text).first()
+    if not tag:
+        tag = Tag(text=tag_text)
+    return render_template('blog/tag_search.html', title=tag.text, tag=tag)
+
+@bp.route('/posts')
+def all_posts():
+    pass
 
 @bp.route('/new_post', methods=['GET', 'POST'])
 @login_required
