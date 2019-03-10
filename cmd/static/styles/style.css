@@ -1,5 +1,6 @@
 :root {
     --main-color: hsl(211, 100%, 60%);
+    --main-gray: #555;
 }
 
 html { height: 100%; }
@@ -7,8 +8,12 @@ body {
     height: 100%;
     padding-top: 70px;
     font-size: 12pt;
+    font-family: 'Roboto', sans-serif;
 }
 
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
+    font-family: 'Roboto Slab', serif;
+}
 a:link, a:visited {
     color: var(--main-color);
     text-decoration: none;
@@ -19,8 +24,8 @@ a:hover, a:active {
     text-decoration: underline;
 }
 
-code {
-    
+hr {
+    border-top: 1px solid var(--main-gray);    
 }
 
 .label-info {
@@ -33,7 +38,7 @@ code {
 
 .navbar {
     background-color: #fff;
-    border-bottom: 3px solid #555;
+    border-bottom: 3px solid var(--main-gray);
 }
 
 .navbar a {
@@ -47,7 +52,7 @@ code {
 }
 
 .jumbotron {
-    background-color: #555;
+    background-color: var(--main-gray);
 }
 
 .jumbotron h1, .jumbotron p {
@@ -55,23 +60,28 @@ code {
 }
 
 .jumbotron .btn {
-    color: #555;
+    color: var(--main-gray);
 }
 .jumbotron .btn:hover {
-    background-color: #555;
+    background-color: var(--main-gray);
     border-color: #000;
     color: #fff;
 }
 
+.lead {
+    font-weight: bold;
+    
+}
+
 .row-about {
-    border: 2px solid #555;
+    border: 2px solid var(--main-gray);
     border-radius: 0.5em;
     padding: 10px;
     margin-bottom: 1em;
 }
 
 .row-about .list-group-item {
-    font-size: 1.3em;
+    font-size: 1.2em;
     border: 0px;
 }
 
@@ -80,7 +90,7 @@ code {
 }
 
 .footer {
-    background-color: #555;
+    background-color: var(--main-gray);
     color: #fff;
 }
 
@@ -108,10 +118,12 @@ code {
     color: #aaa;
     border: 1px solid #aaa;
     padding: 3px 6px;
+    font-size: 0.8em;
+    font-weight: bold;
 }
 
 .blog-header {
-    border-bottom: 2px solid #555;
+    border-bottom: 2px solid var(--main-gray);
 }
 
 .blog-header p {
@@ -141,10 +153,17 @@ code {
 }
 
 .prev-next-buttons .btn {
-    color: #555;
+    color: var(--main-gray);
 }
 .prev-next-buttons .btn:hover {
-    background-color: #555;
+    background-color: var(--main-gray);
     border-color: #000;
     color: #fff;
+}
+
+.pagination li.disabled span { cursor: pointer; }
+.pagination li a, .pagination li a:hover { color: var(--main-gray); }
+.pagination li.active span, .pagination li.active span:hover {
+    background-color: var(--main-gray);
+    border-color: var(--main-gray);
 }

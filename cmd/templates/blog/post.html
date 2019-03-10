@@ -25,13 +25,13 @@
             </div>
 
             {% if g.post_list %}
+            <hr>
             <h4>Recent posts</h4>
             <div class="list-group blog-recent-posts">
                 {% for post in g.post_list %}
                 <a href="{{ post.url }}" class="list-group-item">{{ post.title }}</a>
                 {% endfor %}
             </div>
-            <!-- <p><a href="{{ url_for('.all_posts') }}">See all posts</a></p> -->
             {% endif %}
         </div>
     </div>

@@ -4,10 +4,10 @@
 {% block blog_content %}
     <div class="row">
         <div class="col-xs-12">
-            <h3>Entries posted under <em>{{ title }}</em></h3>
+            <h3>All posts.</h3>
             {% if not posts.items %}
             <hr>
-            <p>No entries for this tag.</p>
+            <p>No posts yet.</p>
             <p><a href="{{ url_for('.main') }}">Return to <em>{{ g.blog_title }}</em></a></p>
             {% else %}
             {% for post in posts.items %}
@@ -20,5 +20,6 @@
             {% endif %}
         </div>
     </div>
-    {{ render_pagination(posts, url_for('.tag_search', tag_text=title)) }}
+    {{ render_pagination(posts, url_for('.all_posts')) }}
+
 {% endblock %}

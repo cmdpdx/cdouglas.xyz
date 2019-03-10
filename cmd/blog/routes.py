@@ -57,14 +57,33 @@ def by_title(simple_title):
 
 @bp.route('/tag/<tag_text>')
 def tag_search(tag_text):
-    tag = Tag.query.filter_by(text=tag_text).first()
-    if not tag:
-        tag = Tag(text=tag_text)
-    return render_template('blog/tag_search.html', title=tag.text, tag=tag)
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.\
+        join(Post.tags).\
+        filter(Tag.text == tag_text)
+    if not current_user.is_authenticated:
+        posts = posts.filter(Post.public == True)
+    posts = posts.paginate(page, current_app.config['POSTS_PER_PAGE'], error_out=False)
+    
+    # Show last page if a non-existent page is requested
+    if page > posts.pages:
+        return redirect(url_for('.tag_search', tag_text=tag_text, page=posts.pages))
+
+    return render_template('blog/tag_search.html', title=tag_text, posts=posts)
 
 @bp.route('/posts')
 def all_posts():
-    pass
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.\
+        order_by(Post.timestamp.desc())
+    if not current_user.is_authenticated:
+        posts = posts.filter_by(public=True)
+    posts = posts.paginate(page=page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    
+    # if a page with no posts was requested, show the last page
+    if page > posts.pages:
+        return redirect(url_for('.all_posts', page=posts.pages))
+    return render_template('blog/all_posts.html', title='All posts', posts=posts)
 
 @bp.route('/new_post', methods=['GET', 'POST'])
 @login_required

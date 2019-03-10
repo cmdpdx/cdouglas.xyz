@@ -8,6 +8,7 @@
 
 {% block styles %}
 {{ super() }}
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Slab" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
 
@@ -30,7 +31,7 @@
 
             <div class="collapse navbar-collapse" id="cd-navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('blog.main') }}"><em>{{ g.blog_title }}</em></a></li>
+                    <li><a href="{{ url_for('blog.main') }}">Blog</a></li>
                     <li><a href="#">{{ _('Projects') }}</a></li>
                 </ul>
 
