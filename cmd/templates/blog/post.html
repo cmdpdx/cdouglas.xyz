@@ -6,9 +6,9 @@
             {% if post %}
             {% include 'blog/_post_title.html' %}
             <hr>
-            <p class="blog-body">
+            <div class="blog-body">
                 {{ post.body|safe }}
-            </p>
+            </div>
             {% else %}
             <p class="blog-body">No post to show.</p>
             {% endif %}

@@ -5,12 +5,12 @@
     <div class="row">
         <div class="col-xs-12">
             <h3>All posts.</h3>
-            {% if not posts.items %}
+            {% if not posts %}
             <hr>
             <p>No posts yet.</p>
             <p><a href="{{ url_for('.main') }}">Return to <em>{{ g.blog_title }}</em></a></p>
             {% else %}
-            {% for post in posts.items %}
+            {% for post in posts %}
             <div class="blog-post-summary">
                 {% include 'blog/_post_title.html' %}
                 <hr>
@@ -20,6 +20,6 @@
             {% endif %}
         </div>
     </div>
-    {{ render_pagination(posts, url_for('.all_posts')) }}
+    {{ render_pagination(pager, url_for('.all_posts')) }}
 
 {% endblock %}

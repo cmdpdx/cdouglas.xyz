@@ -6,7 +6,6 @@ from flask_login import current_user
 from cmd import db
 from cmd.models import Post, Tag
 
-
 def generate_post_list():
     """Create list of recent blog posts and store in Flask global g."""
     g.post_list = []
@@ -24,8 +23,6 @@ def generate_post_list():
 
 def create_post(title, body, tags, public):
     """Create a new Post and return the new id."""
-    # strip spaces from behind commas before splitting
-    tags_strings = tags.replace(', ', ',').split(',')
     post = Post(
         title=title,
         simple_title=simplify_title(title),
@@ -34,16 +31,16 @@ def create_post(title, body, tags, public):
         author=current_user
     )
     
-    existing_tags = Tag.query.filter(Tag.text.in_(tags_strings)).all()
-    for tag in exisiting_tags:
-        if str(tag) in tags_strings:
-            tags_strings.remove(str(tag))
+    newpost_tags = [s.strip().lower() for s in tags.split(',')]
+    existing_tags = Tag.query.filter(Tag.text.in_(newpost_tags)).all()
+    for tag in existing_tags:
+        newpost_tags.remove(str(tag))
         post.tags.append(tag)
 
-    for tag in tags_strings:
-        t = Tag(text=tag)
-        post.tags.append(t)
-        db.session.add(t)
+    for tag_text in newpost_tags:
+        tag = Tag(text=tag_text)
+        post.tags.append(tag)
+        db.session.add(tag)
 
     db.session.add(post)
     db.session.commit()
@@ -52,7 +49,6 @@ def create_post(title, body, tags, public):
 
 def update_post(post_id, title, body, tags, public):
     """Update an exisiting Post, return False if post isn't found"""
-    tags_strings = tags.replace(', ', ',').split(',')
     post = Post.query.get(post_id)
     if not post:
         return False
@@ -62,23 +58,19 @@ def update_post(post_id, title, body, tags, public):
     post.public = public
     
     # update the tags
-    to_remove = []
+    update_tags = [s.strip().lower() for s in tags.split(',')]
     for tag in post.tags:
-        if str(tag) in tags_strings:
-            tags_strings.remove(str(tag))
+        if tag in update_tags:
+            update_tags.remove(str(tag))
         else:
-            to_remove.append(tag)
+            post.tags.remove(tag)
 
-    for tag in to_remove:
-        post.tags.remove(tag)
-
-    for tag in tags_strings:
-        t = Tag.query.filter_by(text=tag).first()
-        if not t:
-            t = Tag(text=tag)
-            db.session.add(t)
-        post.tags.append(t)
-        
+    for tag_str in update_tags:
+        tag = Tag.query.filter_by(text=tag_str).first()
+        if not tag:
+            tag = Tag(text=tag_str)
+            db.session.add(tag)
+        post.tags.append(tag)
 
     db.session.commit()
     current_app.logger.info(f'{current_user.username} UPDATED post id={post.id}, title={post.title}')

@@ -7,6 +7,6 @@ from cmd.models import User
 
 class LoginForm(FlaskForm):
     username = StringField('User', validators=[DataRequired()])
-    password = PasswordField('Pass', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember')
     submit = SubmitField('Log in')

@@ -48,6 +48,14 @@ class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(64), index=True, unique=True, nullable=False)
 
+    def __eq__(self, other):
+        if isinstance(other, Tag):
+            return self.text == other.text
+        elif isinstance(other, str):
+            return self.text == other
+        else:
+            raise TypeError('equality comparison must be with type str or Tag')
+
     def __str__(self):
         return self.text
 
