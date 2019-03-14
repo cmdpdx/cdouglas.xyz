@@ -22,9 +22,10 @@ def main():
     if not current_user.is_authenticated:
         post = post.filter_by(public=True)
     post = post.first()
-    prev_url = get_prev_url(post)
+    prev_url = get_prev_url(post) if post else None
     next_url = None
-    post.body = markdown(post.body)
+    if post:
+        post.body = markdown(post.body)
     return render_template(
         'blog/post.html', 
         title=current_app.config['BLOG_TITLE'], 
@@ -58,7 +59,6 @@ def by_title(simple_title):
 @bp.route('/tag/<tag_text>')
 def tag_search(tag_text):
     page = request.args.get('page', 1, type=int)
-    print(page)
     posts = Post.query.\
         join(Post.tags).\
         filter(Tag.text == tag_text)
