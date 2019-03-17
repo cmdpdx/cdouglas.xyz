@@ -13,6 +13,8 @@ class Config(object):
     LOG_TO_STDOUT = False
     CONTACT_EMAIL = 'cdouglas.xyz@gmail.com'
     POSTS_PER_PAGE = 10
+    UPLOAD_FOLDER = 'blog_posts'
+    ALLOWED_EXTENSIONS = set(['md', 'txt'])
 
     # Flask configurations
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'this-issomelong#sentence'

@@ -12,12 +12,16 @@
     {% if form %}
     <div class="row">
         <div class="col-md-8">
-            <form action="" method="post" class="form" role="form" id="post_form">
+            <form action="{{ request.url }}" method="post" class="form" role="form" id="post_form">
                 {{ form.hidden_tag() }}
                 {{ form.id_() }}
                 <div class="form-group required">
                     {{ form.title.label(class='control-label') }} 
                     {{ form.title(class='form-control') }}
+                </div>
+                <div class="form-group">
+                    {{ form.summary.label(class='control-label') }}
+                    {{ form.summary(class='form-control', rows=3) }}
                 </div>
                 <div class="form-group required">
                     {{ form.body.label(class='control-label') }} 
@@ -38,6 +42,19 @@
                 </div>
             </form>
         </div>
+        {% if g.show_upload %}
+        <div class="col-md-4">
+            <form action="{{ url_for('blog.upload_file') }}" 
+                method="post" class="form" role="form" id="upload_form" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <p><label for="file_upload">Upload post body file (.md or .txt)</label> 
+                    <input type=file name=file id="file_upload"></p>
+                    <p><button class="btn btn-default" type="submit" id="btn_upload">Upload file</button></p>
+                </div>
+            </form>
+        </div>
+        {% endif %}
     </div>
     <div class="modal fade" id="modal_delete" tabindex="-1" role="dialog" aria-labelledby="modal_delete_title">
         <div class="modal-dialog modal-sm" role="document">
@@ -68,7 +85,7 @@
                 url: {{ url_for('blog.save_post')|tojson }},
                 data: $('#post_form').serialize()
             }).done(function (data) {
-                $('#message_box').append('<div class="alert alert-info" role="alert">' + data.message + '</div>');
+                $('#message_box').append('<div class="alert alert-info alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.message + '</div>');
                 // Enable the delete button
                 $('#id_').val(data.post_id);
                 $('#btn_delete').removeClass('disabled');

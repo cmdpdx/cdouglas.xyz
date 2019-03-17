@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, Length
 class PostForm(FlaskForm):
     id_ = HiddenField('id')
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+    summary = TextAreaField('Summary')
     body = TextAreaField('Post body', validators=[DataRequired()])
     tags = StringField('Tags')
     public = BooleanField('Make public')

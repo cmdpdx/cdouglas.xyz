@@ -26,6 +26,8 @@ a:hover, a:active {
     text-decoration: underline;
 }
 
+code a { color: var(--main-color); }
+
 hr { border-top: 1px solid var(--main-gray);    }
 
 .label-info { background: var(--main-color); }
