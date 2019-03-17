@@ -12,9 +12,16 @@
     {% if form %}
     <div class="row">
         <div class="col-md-8">
-            <form action="{{ request.url }}" method="post" class="form" role="form" id="post_form">
+            <form action="
+                {%- if 'upload_file' in request.url or 'post_id' not in request.url -%}
+                {{ url_for('.new_post') }}
+                {%- elif 'post_id' in request.url -%}
+                {{ url_for('.new_post', post_id=request.args['post_id']) }}
+                {%- else -%}
+                {{ url_for('.new_post') }}
+                {%- endif -%}
+                " method="post" class="form" role="form" id="post_form">
                 {{ form.hidden_tag() }}
-                {{ form.id_() }}
                 <div class="form-group required">
                     {{ form.title.label(class='control-label') }} 
                     {{ form.title(class='form-control') }}
