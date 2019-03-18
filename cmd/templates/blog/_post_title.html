@@ -19,8 +19,8 @@
                     {%- endif %}
                 </span>&nbsp;                
                 {% if post.tags -%}
-                    under&nbsp;
                     {% for tag in post.tags -%}
+                        {%- if loop.first -%}under&nbsp;{%- endif -%}
                         <a class="label-link" href="{{ url_for('.tag_search', tag_text=tag.text) }}">
                             <span class="label label-info">{{ tag }}</span>
                         </a>

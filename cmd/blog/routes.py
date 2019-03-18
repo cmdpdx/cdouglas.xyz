@@ -62,6 +62,7 @@ def by_title(simple_title):
 
 @bp.route('/tag/<tag_text>')
 def tag_search(tag_text):
+    """Render the search page with all posts tagged by tag_text."""
     page = request.args.get('page', 1, type=int)
     pager = Post.query.\
         join(Post.tags).\
@@ -80,6 +81,7 @@ def tag_search(tag_text):
 
 @bp.route('/posts')
 def all_posts():
+    """Render the search page with all posts, in descending chronological order."""
     page = request.args.get('page', 1, type=int)
     pager = Post.query.\
         order_by(Post.timestamp.desc())
@@ -149,16 +151,19 @@ def upload_file():
         return redirect(url_for('.new_post'))
     file = request.files['file']
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+        filename = os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+        file.save(filename)
         form = PostForm()
-        with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filename)) as f:
+        with open(filename) as f:
             form.body.data = f.read()
+        if os.path.exists(filename):
+            os.remove(filename)
         g.show_upload = False
         return render_template('blog/new_post.html', title='New post', form=form)
     
     flash('Upload failed.')
     return redirect(url_for('.new_post'))
+
 
 @bp.route('/save_post', methods=['POST'])
 @login_required
