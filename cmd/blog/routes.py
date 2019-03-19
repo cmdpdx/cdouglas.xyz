@@ -1,6 +1,5 @@
 import os
 import html
-from markdown import markdown
 
 from flask import render_template, flash, redirect, url_for, request,\
     current_app, g, jsonify, abort
@@ -33,7 +32,7 @@ def main():
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
-        body=markdown(body),
+        body=body,
         prev_url=prev_url,
         next_url=next_url
     )
@@ -55,7 +54,7 @@ def by_title(simple_title):
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
-        body=markdown(body),
+        body=body,
         prev_url=prev_url,
         next_url=next_url)    
 
@@ -161,7 +160,7 @@ def upload_file():
         g.show_upload = False
         return render_template('blog/new_post.html', title='New post', form=form)
     
-    flash('Upload failed.')
+    flash('Extension not allowed (must be .txt or .md)') if file else flash('Upload failed.')
     return redirect(url_for('.new_post'))
 
 

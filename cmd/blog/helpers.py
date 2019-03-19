@@ -1,6 +1,8 @@
 import os
 from collections import namedtuple
 
+from markdown import markdown
+
 from flask import g, current_app, url_for
 from flask_login import current_user
 
@@ -39,7 +41,7 @@ def create_post(title, summary, body, tags, public):
         author=current_user
     )
     # Save post body to file
-    filename = os.path.join(os.getcwd(), 'blog_posts', f'{post.simple_title}.md')
+    filename = os.path.join('blog_posts', f'{post.simple_title}.md')
     with open(filename, 'w') as f:
         f.write(body)
 
@@ -67,6 +69,10 @@ def update_post(post_id, title, summary, body, tags, public):
     if not post:
         return False
     post.title = title
+    # If the simple title has changed, the body new_filename will change, 
+    # so delete the old file while we still know its name.
+    if post.simple_title != simplify_title(title):
+        os.remove(os.path.join('blog_posts', f'{post.simple_title}.md'))
     post.simple_title = simplify_title(title)
     post.summary = summary
     post.public = public
@@ -127,7 +133,7 @@ def get_post_body(title):
             body = f.read()
     except FileNotFoundError:
         body = f'No post file found for "{title}"'
-    return body
+    return markdown(body)
 
 
 def simplify_title(title):
