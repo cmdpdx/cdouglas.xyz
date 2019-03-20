@@ -48,4 +48,9 @@
 {{ super() }}
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+        $(document).ready(function() {
+            $('#blog-body a').attr('target', '_blank');
+        });
+    </script>
 {% endblock %}

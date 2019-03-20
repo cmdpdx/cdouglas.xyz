@@ -1,6 +1,9 @@
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
 
+# Folders specifically to ignore
+**/.ignore/
+
 # Virtual environment
 venv/
 

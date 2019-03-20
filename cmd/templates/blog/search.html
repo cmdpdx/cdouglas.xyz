@@ -20,5 +20,7 @@
             {%- endif %}
         </div>
     </div>
+    {% if posts and pager.pages > 1 -%}
     {{ render_pagination(pager, pagination_url) }}
+    {%- endif %}
 {% endblock %}

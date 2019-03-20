@@ -9,7 +9,7 @@ html { height: 100%; }
 body {
     height: 100%;
     padding-top: 70px;
-    font-size: 13pt;
+    font-size: 12pt;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -71,7 +71,7 @@ hr { border-top: 1px solid var(--main-gray);    }
 }
 
 .row-about .list-group-item {
-    font-size: 1.1em;
+    font-size: 1.25em;
     border: 0px;
 }
 

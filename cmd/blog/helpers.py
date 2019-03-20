@@ -1,8 +1,6 @@
 import os
 from collections import namedtuple
 
-from markdown import markdown
-
 from flask import g, current_app, url_for
 from flask_login import current_user
 
@@ -33,29 +31,27 @@ def allowed_file(filename):
 
 def create_post(title, summary, body, tags, public):
     """Create a new Post and return the new id."""
+    simple_title = simplify_title(title)
     post = Post(
         title=title,
-        simple_title=simplify_title(title),
+        simple_title=simple_title,
         summary=summary,
         public=public,
         author=current_user
     )
+
     # Save post body to file
-    filename = os.path.join('blog_posts', f'{post.simple_title}.md')
-    with open(filename, 'w') as f:
+    with open(post.filename, 'w') as f:
         f.write(body)
 
     # Attach Tags to the post
     newpost_tags = [s.strip().lower() for s in tags.split(',') if s.strip() != '']
-    existing_tags = Tag.query.filter(Tag.text.in_(newpost_tags)).all()
-    for tag in existing_tags:
-        newpost_tags.remove(str(tag))
+    for tag_str in newpost_tags:
+        tag = Tag.query.filter_by(text=tag_str).first()
+        if not tag:
+            tag = Tag(text=tag_str)
+            db.session.add(tag)
         post.tags.append(tag)
-
-    for tag_text in newpost_tags:
-        tag = Tag(text=tag_text)
-        post.tags.append(tag)
-        db.session.add(tag)
 
     db.session.add(post)
     db.session.commit()
@@ -72,30 +68,24 @@ def update_post(post_id, title, summary, body, tags, public):
     # If the simple title has changed, the body new_filename will change, 
     # so delete the old file while we still know its name.
     if post.simple_title != simplify_title(title):
-        os.remove(os.path.join('blog_posts', f'{post.simple_title}.md'))
+        os.remove(post.filename)
     post.simple_title = simplify_title(title)
     post.summary = summary
     post.public = public
 
     # Save post body to file
-    filename = os.path.join('blog_posts', f'{post.simple_title}.md')
-    with open(filename, 'w') as f:
+    with open(post.filename, 'w') as f:
         f.write(body)
     
     # Update the tags
     update_tags = [s.strip().lower() for s in tags.split(',') if s.strip() != '']
-    for tag in post.tags:
-        if tag in update_tags:
-            update_tags.remove(str(tag))
-        else:
-            post.tags.remove(tag)
-
+    post.tags.clear()
     for tag_str in update_tags:
         tag = Tag.query.filter_by(text=tag_str).first()
         if not tag:
             tag = Tag(text=tag_str)
             db.session.add(tag)
-        post.tags.append(tag)
+        post.tags.append(tag) 
 
     db.session.commit()
     current_app.logger.info(f'{current_user.username} UPDATED post id={post.id}, title={post.title}')
@@ -111,12 +101,12 @@ def delete_post(post_id):
     current_app.logger.info(f'{current_user.username} DELETED post id={post_id}, title={post.title}')
     # If an associated post file exists, move it to the '.deleted' folder to
     # be deleted after a set duration
-    filename = os.path.join('blog_posts', f'{post.simple_title}.md')
-    if os.path.exists(filename):
-        if not os.path.exists(os.path.join('blog_posts', '.deleted')):
-            os.mkdir(os.path.join('blog_posts', '.deleted'))
-        new_filename = os.path.join(os.path.dirname(filename), '.deleted', os.path.basename(filename))
-        os.rename(filename, new_filename)
+    blog_post_dir = current_app.config['BLOG_POST_DIR']
+    if os.path.exists(post.filename):
+        if not os.path.exists(os.path.join(blog_post_dir, '.deleted')):
+            os.mkdir(os.path.join(blog_post_dir, '.deleted'))
+        new_filename = os.path.join(blog_post_dir, '.deleted', os.path.basename(post.filename))
+        os.rename(post.filename, new_filename)
 
     # Delete the post from the DB
     db.session.delete(post)
@@ -124,16 +114,15 @@ def delete_post(post_id):
     return True
 
 
-def get_post_body(title):
+def get_post_body(post):
     """Get the contents of a post's body Markdown file, if it exists"""
-    filename = os.path.join('blog_posts', f'{simplify_title(title)}.md')
     body = ''
     try:
-        with open(filename) as f:
+        with open(post.filename) as f:
             body = f.read()
     except FileNotFoundError:
-        body = f'No post file found for "{title}"'
-    return markdown(body)
+        body = f'No post file found.'
+    return body
 
 
 def simplify_title(title):

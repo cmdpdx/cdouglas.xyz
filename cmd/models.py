@@ -1,9 +1,11 @@
+import os
+
+from flask import current_app
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from cmd import db, login
-
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +26,11 @@ class User(UserMixin, db.Model):
         return f'<User {self.username}>'
 
 
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+
 tags = db.Table('tags',
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
     db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True)
@@ -40,6 +47,12 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tags = db.relationship('Tag', secondary=tags, lazy='subquery', backref=db.backref('posts', lazy=True))
 
+    @property
+    def filename(self):
+        if not self.simple_title:
+            return ''
+        return os.path.join(current_app.config['BLOG_POST_DIR'], f'{self.simple_title}.md')
+    
     def __repr__(self):
         return f'<Post {self.title}>'
 
@@ -62,7 +75,3 @@ class Tag(db.Model):
     def __repr__(self):
         return f'<Tag {self.text}>'
 
-
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))

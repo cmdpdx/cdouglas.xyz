@@ -1,6 +1,8 @@
 import os
 import html
 
+from markdown import markdown
+
 from flask import render_template, flash, redirect, url_for, request,\
     current_app, g, jsonify, abort
 from werkzeug.utils import secure_filename
@@ -25,14 +27,14 @@ def main():
     post = post.first()
     prev_url = get_prev_url(post) if post else None
     next_url = None
-    body = get_post_body(post.title)
+    body = get_post_body(post) if post else ''
 
     return render_template(
         'blog/view_post.html', 
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
-        body=body,
+        body=markdown(body),
         prev_url=prev_url,
         next_url=next_url
     )
@@ -47,14 +49,14 @@ def by_title(simple_title):
         return abort(404)
     prev_url = get_prev_url(post)
     next_url = get_next_url(post)
-    body = get_post_body(post.title)
+    body = get_post_body(post)
 
     return render_template(
         'blog/view_post.html', 
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
-        body=body,
+        body=markdown(body),
         prev_url=prev_url,
         next_url=next_url)    
 
@@ -133,7 +135,7 @@ def new_post():
         form.id_.data = post.id
         form.title.data = post.title
         form.summary.data = post.summary
-        form.body.data = get_post_body(post.title)
+        form.body.data = get_post_body(post)
         form.tags.data = ', '.join(list(map(str, post.tags)))
         form.public.data = post.public
         g.show_upload = False
