@@ -45,8 +45,7 @@ def create_post(title, summary, body, tags, public):
         f.write(body)
 
     # Attach Tags to the post
-    newpost_tags = [s.strip().lower() for s in tags.split(',') if s.strip() != '']
-    for tag_str in newpost_tags:
+    for tag_str in tags:
         tag = Tag.query.filter_by(text=tag_str).first()
         if not tag:
             tag = Tag(text=tag_str)
@@ -78,9 +77,8 @@ def update_post(post_id, title, summary, body, tags, public):
         f.write(body)
     
     # Update the tags
-    update_tags = [s.strip().lower() for s in tags.split(',') if s.strip() != '']
     post.tags.clear()
-    for tag_str in update_tags:
+    for tag_str in tags:
         tag = Tag.query.filter_by(text=tag_str).first()
         if not tag:
             tag = Tag(text=tag_str)

@@ -107,6 +107,7 @@ def new_post():
     post_id = request.args.get('post_id', 0, type=int)
     # On successful POST submit...
     if form.validate_on_submit():
+        tags = [s.strip().lower() for s in form.tags.data.split(',') if s.strip() != '']
         # Edit of an exisiting post
         if post_id:
             update_post(
@@ -114,7 +115,7 @@ def new_post():
                 title=form.title.data,
                 summary=form.summary.data, 
                 body=form.body.data, 
-                tags=form.tags.data,
+                tags=tags,
                 public=form.public.data)
             flash('Post updated.')
         # New post
@@ -123,7 +124,7 @@ def new_post():
                 title=form.title.data, 
                 summary=form.summary.data,
                 body=form.body.data, 
-                tags=form.tags.data,
+                tags=tags,
                 public=form.public.data)
             flash('Post submitted.')
         return redirect(url_for('.by_title', simple_title=simplify_title(form.title.data)))
@@ -170,13 +171,15 @@ def upload_file():
 @login_required
 def save_post():
     post_id = request.form.get('id_', 0, type=int)
+    tags_str = request.form.get('tags', '', type=str)
+    tags = [s.strip().lower() for s in tags_str.split(',') if s != '']
     if not post_id:
         # new post
         post_id = create_post(
             title=request.form.get('title', '', type=str),
             summary=request.form.get('summary', '', type=str),
             body=request.form.get('body', '', type=str),
-            tags=request.form.get('tags', '', type=str),
+            tags=tags,
             public=request.form.get('public', False, type=bool))
     else:
         # update post
@@ -185,7 +188,7 @@ def save_post():
             title=request.form.get('title', '', type=str),
             summary=request.form.get('summary', '', type=str),
             body=request.form.get('body', '', type=str),
-            tags=request.form.get('tags', '', type=str),
+            tags=tags,
             public=request.form.get('public', False, type=bool))
         
     return jsonify(succes=True, message='Post saved.', post_id=post_id)
