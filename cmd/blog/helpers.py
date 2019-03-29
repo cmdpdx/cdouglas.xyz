@@ -31,10 +31,9 @@ def allowed_file(filename):
 
 def create_post(title, summary, body, tags, public):
     """Create a new Post and return the new id."""
-    simple_title = simplify_title(title)
     post = Post(
         title=title,
-        simple_title=simple_title,
+        simple_title=simplify_title(title),
         summary=summary,
         public=public,
         author=current_user
@@ -114,13 +113,14 @@ def delete_post(post_id):
 
 def get_post_body(post):
     """Get the contents of a post's body Markdown file, if it exists"""
-    body = ''
     try:
         with open(post.filename) as f:
             body = f.read()
+        return body
     except FileNotFoundError:
-        body = f'No post file found.'
-    return body
+        return 'No post file found.'
+    except:
+        return 'Error retrieving post file.'
 
 
 def simplify_title(title):

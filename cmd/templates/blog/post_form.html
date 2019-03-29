@@ -13,12 +13,10 @@
     <div class="row">
         <div class="col-md-8">
             <form action="
-                {%- if 'upload_file' in request.url or 'post_id' not in request.url -%}
-                {{ url_for('.new_post') }}
-                {%- elif 'post_id' in request.url -%}
-                {{ url_for('.new_post', post_id=request.args['post_id']) }}
+                {%- if 'post_id' in request.url -%}
+                    {{ url_for('.edit_post', post_id=request.args['post_id']) }}
                 {%- else -%}
-                {{ url_for('.new_post') }}
+                    {{ url_for('.new_post') }}
                 {%- endif -%}
                 " method="post" class="form" role="form" id="post_form">
                 {{ form.hidden_tag() }}
@@ -49,7 +47,7 @@
                 </div>
             </form>
         </div>
-        {% if g.show_upload -%}
+        {% if 'post_id' not in request.url -%}
         <div class="col-md-4">
             <form action="{{ url_for('blog.upload_file') }}" 
                 method="post" class="form" role="form" id="upload_form" enctype="multipart/form-data">

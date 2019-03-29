@@ -67,7 +67,8 @@ def tag_search(tag_text):
     page = request.args.get('page', 1, type=int)
     pager = Post.query.\
         join(Post.tags).\
-        filter(Tag.text == tag_text)
+        filter(Tag.text == tag_text).\
+        order_by(Post.timestamp.desc())
     if not current_user.is_authenticated:
         pager = pager.filter(Post.public == True)
     pager = pager.paginate(page, current_app.config['POSTS_PER_PAGE'], error_out=False)
@@ -100,49 +101,52 @@ def all_posts():
 @bp.route('/new_post', methods=['GET', 'POST'])
 @login_required
 def new_post():
-    """Create a new post or edit an existing post."""
     form = PostForm()
-    page_title = 'New post'
-    g.show_upload = True
-    post_id = request.args.get('post_id', 0, type=int)
-    # On successful POST submit...
     if form.validate_on_submit():
-        tags = [s.strip().lower() for s in form.tags.data.split(',') if s.strip() != '']
-        # Edit of an exisiting post
-        if post_id:
-            update_post(
-                post_id=post_id, 
-                title=form.title.data,
-                summary=form.summary.data, 
-                body=form.body.data, 
-                tags=tags,
-                public=form.public.data)
-            flash('Post updated.')
-        # New post
-        else:
-            post_id = create_post(
-                title=form.title.data, 
-                summary=form.summary.data,
-                body=form.body.data, 
-                tags=tags,
-                public=form.public.data)
-            flash('Post submitted.')
+        tags = [s.strip().lower() for s in form.tags.data.split(',') if s.strip()]    
+        post_id = create_post(
+            title=form.title.data, 
+            summary=form.summary.data,
+            body=form.body.data, 
+            tags=tags,
+            public=form.public.data)
+        flash('Post submitted.')
         return redirect(url_for('.by_title', simple_title=simplify_title(form.title.data)))
-    # ...or, GET request to edit an existing post
-    elif request.method == 'GET' and post_id:
-        post = Post.query.get(post_id)
-        if not post:
-            return redirect(url_for('.main'))
-        form.id_.data = post.id
-        form.title.data = post.title
-        form.summary.data = post.summary
-        form.body.data = get_post_body(post)
-        form.tags.data = ', '.join(list(map(str, post.tags)))
-        form.public.data = post.public
-        g.show_upload = False
-        page_title = 'Edit post'
+    
+    return render_template('blog/post_form.html', title='New post', form=form)
 
-    return render_template('blog/new_post.html', title=page_title, form=form)
+
+@bp.route('/edit_post', methods=['GET', 'POST'])
+@login_required
+def edit_post():
+    form = PostForm()
+    post_id = request.args.get('post_id', 0, type=int)
+
+    # POST request: Save updated post
+    if form.validate_on_submit():
+        tags = [s.strip().lower() for s in form.tags.data.split(',') if s.strip()]
+        update_post(
+            post_id=post_id,
+            title=form.title.data,
+            summary=form.summary.data,
+            body=form.body.data,
+            tags=tags,
+            public=form.public.data)
+        flash('Post updated.')
+        return redirect(url_for('.by_title', simple_title=simplify_title(form.title.data)))
+
+    # GET request: Get the post to edit, redirect to new post if not found
+    post = Post.query.get(post_id)
+    if not post:
+        return redirect(url_for('.new_post'))
+
+    form.id_.data = post.id
+    form.title.data = post.title
+    form.summary.data = post.summary
+    form.body.data = get_post_body(post)
+    form.tags.data = ', '.join(list(map(str, post.tags)))
+    form.public.data = post.public
+    return render_template('blog/post_form.html', title='Edit post', form=form)
 
 
 @bp.route('/upload_file', methods=['POST'])
@@ -161,9 +165,11 @@ def upload_file():
         if os.path.exists(filename):
             os.remove(filename)
         g.show_upload = False
-        return render_template('blog/new_post.html', title='New post', form=form)
+        return render_template('blog/post_form.html', title='New post', form=form)
     
-    flash('Extension not allowed (must be .txt or .md)') if file else flash('Upload failed.')
+    extensions = ', '.join(current_app.config['ALLOWED_EXTENSIONS'])
+    message = f'Extension not allowed (must be one of {extensions})'
+    flash(message) if file else flash('Upload failed.')
     return redirect(url_for('.new_post'))
 
 
