@@ -1,11 +1,38 @@
 import os
 
-from flask import current_app
+from flask import current_app, url_for
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from markdown import markdown
+
 from cmd import db, login
+#from cmd.blog import get_post_body
+
+
+class PaginatedAPIMixin(object):
+    @staticmethod
+    def to_collection_dict(query, page, per_page, endpoint, **kwargs):
+        resources = query.paginate(page, per_page, False)
+        data = {
+            'items': [item.to_dict() for item in resources.items],
+            '_meta': {
+                'page': page,
+                'per_page': per_page,
+                'total_pages': resources.pages,
+                'total_items': resources.total
+            },
+            '_links': {
+                'self': url_for(endpoint, page=page, per_page=per_page, **kwargs),
+                'next': url_for(endpoint, page=page+1, per_page=per_page, **kwargs) \
+                    if resources.has_next else None,
+                'prev': url_for(endpoint, page=page-1, per_page=per_page, **kwargs) \
+                    if resources.has_prev else None
+            }
+        }
+        return data
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,7 +64,7 @@ tags = db.Table('tags',
 )
 
 
-class Post(db.Model):
+class Post(PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     simple_title = db.Column(db.String(100), index=True, unique=True)
@@ -53,6 +80,21 @@ class Post(db.Model):
             return ''
         return os.path.join(current_app.config['BLOG_POST_DIR'], f'{self.simple_title}.md')
     
+    def to_dict(self):
+        data = {
+            'title': self.title,
+            'simple_title': self.simple_title,
+            'summary': self.summary,
+            'timestamp': self.timestamp.isoformat() + 'Z',
+            'author': self.author.username,
+            # TODO: move post body file access into model; also move markdown conversion here,
+            # so all other calls to Post.body get to assume it is safe HTML
+            #'body': markdown(get_post_body(self)), 
+            'url': url_for('blog.by_title', simple_title=self.simple_title),
+            'tags': [str(tag) for tag in self.tags]
+        }
+        return data
+
     def __repr__(self):
         return f'<Post {self.title}>'
 
