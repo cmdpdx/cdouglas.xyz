@@ -80,6 +80,23 @@ class Post(PaginatedAPIMixin, db.Model):
             return ''
         return os.path.join(current_app.config['BLOG_POST_DIR'], f'{self.simple_title}.md')
     
+    # TODO: make body R/W? Move file writing logic into model?
+    @property
+    def body(self):
+        try:
+            with open(self.filename) as f:
+                body = f.read()
+            return body
+        except FileNotFoundError:
+            return 'No post file found.'
+        except:
+            return 'Error retrieving post file.'
+    
+    @property
+    def body_html(self):
+        return markdown(self.body)
+    
+
     def to_dict(self):
         data = {
             'title': self.title,
@@ -89,7 +106,7 @@ class Post(PaginatedAPIMixin, db.Model):
             'author': self.author.username,
             # TODO: move post body file access into model; also move markdown conversion here,
             # so all other calls to Post.body get to assume it is safe HTML
-            #'body': markdown(get_post_body(self)), 
+            'body': self.body_html, 
             'url': url_for('blog.by_title', simple_title=self.simple_title),
             'tags': [str(tag) for tag in self.tags]
         }
