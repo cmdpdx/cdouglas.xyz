@@ -10,7 +10,10 @@ from cmd.models import Post
 @bp.route('/blog', methods=['GET'])
 def get_posts():
     """Get a collection of all blog posts."""
-    pass
+    page = request.args.get('page', 1, type=int)
+    per_page = min(request.args.get('per_page', 10, type=int), 100)
+    data = Post.to_collection_dict(Post.query, page, per_page, 'api.get_posts')
+    return jsonify(data)
 
 # GET   /api/blog/<simple_title>
 @bp.route('/blog/<simple_title>', methods=['GET'])
