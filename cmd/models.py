@@ -8,7 +8,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from markdown import markdown
 
 from cmd import db, login
-#from cmd.blog import get_post_body
 
 
 class PaginatedAPIMixin(object):

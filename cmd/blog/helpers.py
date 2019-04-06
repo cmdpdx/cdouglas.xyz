@@ -111,18 +111,6 @@ def delete_post(post_id):
     return True
 
 
-def get_post_body(post):
-    """Get the contents of a post's body Markdown file, if it exists"""
-    try:
-        with open(post.filename) as f:
-            body = f.read()
-        return body
-    except FileNotFoundError:
-        return 'No post file found.'
-    except:
-        return 'Error retrieving post file.'
-
-
 def simplify_title(title):
     """Format a blog post title to be suitable for use in a URL"""
     builder = []
