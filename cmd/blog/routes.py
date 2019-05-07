@@ -16,7 +16,7 @@ from cmd.blog.helpers import get_prev_url, get_next_url, generate_post_list,\
 
 
 @bp.route('/')
-def main():
+def index():
     """Main blog page; render the most recent post."""
     generate_post_list()
     post = Post.query.order_by(Post.timestamp.desc())
@@ -201,4 +201,4 @@ def delete_post():
     post_id = request.form.get('post_id', 0, type=int)
     if post_id and cmd.blog.helpers.delete_post(post_id):        
         flash('Post deleted')
-    return url_for('blog.main')
+    return url_for('.index')

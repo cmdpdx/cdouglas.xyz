@@ -1,4 +1,6 @@
 import os
+import base64
+from datetime import datetime, timedelta
 
 from flask import current_app, url_for
 from datetime import datetime
@@ -8,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from markdown import markdown
 
 from cmd import db, login
-
+#from cmd.api.errors import bad_request
 
 class PaginatedAPIMixin(object):
     @staticmethod
@@ -41,12 +43,33 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    token = db.Column(db.String(32), index=True, unique=True)
+    token_expiration = db.Column(db.DateTime)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_token(self, expires_in=3600):
+        now = datetime.utcnow()
+        if self.token and self.token_expiration > now + timedelta(seconds=60):
+            return self.token
+        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.add(self)
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+
+    @staticmethod
+    def check_token(token):
+        user = User.query.filter_by(token=token).first()
+        if user is None or user.token_expiration < datetime.utcnow():
+            return None
+        return user
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -121,6 +144,17 @@ class Post(PaginatedAPIMixin, db.Model):
             'tags': [str(tag) for tag in self.tags]
         }
         return data
+
+    # TODO fix this.
+    """def from_dict(self, data, new_post=False):
+        if new_post:
+            for field in ('title', 'body', 'author'):
+                if field not in data:
+                    return bad_request('Post data must contain title, body, and author')
+        for field in ('title', 'author', 'body', 'summary', 'public'):
+            if field in data:
+                setattr(self, field, data[field])
+        self.simple_title = simplify_title(self.title)"""
 
     def __repr__(self):
         return f'<Post {self.title}>'

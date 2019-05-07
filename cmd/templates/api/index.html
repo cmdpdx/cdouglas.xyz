@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>APIs</h1>
+            <p>A valid user account is required to access APIs. <a href="#">Register a new API account (coming soon).</a></p>
+            <ul>
+                <li><h3><a href="{{ url_for('api.blog') }}">Blog</a>: Get individual posts, or a collection of all posts.</h3></li>
+            </ul>
+            <h2>Error response object</h2>
+            <pre><code>
+{
+    'error': &lt;HTTP status error>,
+    'status_code': &lt;status code>,
+    'message': &lt;optional additional error message>
+}
+            </code></pre>
+        </div>
+    </div>
+
+{% endblock %}

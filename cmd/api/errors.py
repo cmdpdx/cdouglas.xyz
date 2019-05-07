@@ -5,7 +5,10 @@ def bad_request(message):
     error_response(400, message)
 
 def error_response(status_code, message=None):
-    payload = {'error': HTTP_STATUS_CODES.get(status_code, 'Unknown error')}
+    payload = {
+        'error': HTTP_STATUS_CODES.get(status_code, 'Unknown error'),
+        'status_code': status_code 
+    }
     if message:
         payload['message'] = message
     response = jsonify(payload)
