@@ -24,3 +24,6 @@ logs/
 
 # Blog posts
 blog_posts/
+
+# API docs (XML) -- in development
+api_docs/ 

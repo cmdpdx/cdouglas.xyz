@@ -1,8 +1,6 @@
 import os
 import html
 
-from markdown import markdown
-
 from flask import render_template, flash, redirect, url_for, request,\
     current_app, g, jsonify, abort
 from werkzeug.utils import secure_filename
@@ -14,11 +12,11 @@ from cmd.blog import bp
 from cmd.blog.forms import PostForm
 import cmd.blog.helpers
 from cmd.blog.helpers import get_prev_url, get_next_url, generate_post_list,\
-    create_post, update_post, simplify_title, get_post_body, allowed_file
+    create_post, update_post, simplify_title, allowed_file
 
 
 @bp.route('/')
-def main():
+def index():
     """Main blog page; render the most recent post."""
     generate_post_list()
     post = Post.query.order_by(Post.timestamp.desc())
@@ -27,14 +25,12 @@ def main():
     post = post.first()
     prev_url = get_prev_url(post) if post else None
     next_url = None
-    body = get_post_body(post) if post else ''
 
     return render_template(
         'blog/view_post.html', 
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
-        body=markdown(body),
         prev_url=prev_url,
         next_url=next_url
     )
@@ -49,14 +45,12 @@ def by_title(simple_title):
         return abort(404)
     prev_url = get_prev_url(post)
     next_url = get_next_url(post)
-    body = get_post_body(post)
 
     return render_template(
         'blog/view_post.html', 
         title=current_app.config['BLOG_TITLE'], 
         description=current_app.config['BLOG_DESCRIPTION'],
         post=post,
-        body=markdown(body),
         prev_url=prev_url,
         next_url=next_url)    
 
@@ -143,7 +137,7 @@ def edit_post():
     form.id_.data = post.id
     form.title.data = post.title
     form.summary.data = post.summary
-    form.body.data = get_post_body(post)
+    form.body.data = post.body
     form.tags.data = ', '.join(list(map(str, post.tags)))
     form.public.data = post.public
     return render_template('blog/post_form.html', title='Edit post', form=form)
@@ -207,4 +201,4 @@ def delete_post():
     post_id = request.form.get('post_id', 0, type=int)
     if post_id and cmd.blog.helpers.delete_post(post_id):        
         flash('Post deleted')
-    return url_for('blog.main')
+    return url_for('.index')

@@ -38,10 +38,7 @@ def create_post(title, summary, body, tags, public):
         public=public,
         author=current_user
     )
-
-    # Save post body to file
-    with open(post.filename, 'w') as f:
-        f.write(body)
+    post.body = body
 
     # Attach Tags to the post
     for tag_str in tags:
@@ -63,18 +60,15 @@ def update_post(post_id, title, summary, body, tags, public):
     if not post:
         return False
     post.title = title
-    # If the simple title has changed, the body new_filename will change, 
-    # so delete the old file while we still know its name.
+    # If the simple title has changed, the body file name will change, 
+    # so delete the old file before creaing a new one.
     if post.simple_title != simplify_title(title):
-        os.remove(post.filename)
+        del post.body
     post.simple_title = simplify_title(title)
     post.summary = summary
     post.public = public
+    post.body = body
 
-    # Save post body to file
-    with open(post.filename, 'w') as f:
-        f.write(body)
-    
     # Update the tags
     post.tags.clear()
     for tag_str in tags:
@@ -109,18 +103,6 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     return True
-
-
-def get_post_body(post):
-    """Get the contents of a post's body Markdown file, if it exists"""
-    try:
-        with open(post.filename) as f:
-            body = f.read()
-        return body
-    except FileNotFoundError:
-        return 'No post file found.'
-    except:
-        return 'Error retrieving post file.'
 
 
 def simplify_title(title):

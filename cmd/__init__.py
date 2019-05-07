@@ -36,8 +36,11 @@ def create_app(config_class=Config):
     app.register_blueprint(main_bp)
 
     from cmd.blog import bp as blog_bp
-    app.register_blueprint(blog_bp, url_prefix="/blog")
+    app.register_blueprint(blog_bp, url_prefix='/blog')
 
+    from cmd.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
+    
     from cmd.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 

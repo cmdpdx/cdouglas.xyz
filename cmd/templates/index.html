@@ -7,8 +7,8 @@
             <h1><i class="fas fa-adjust"></i> Colin Douglas</h1>
             <p>Teacher // Developer <br \></p>
             <p>
-                <a class="btn btn-default btn-lg" href="{{ url_for('blog.main') }}">Read the blog</a>
-                <!-- <a class="btn btn-default btn-lg" href="#" id="projects_btn">Example projects</a> -->
+                <a class="btn btn-default btn-lg" href="{{ url_for('blog.index') }}">Read the blog</a>
+                <a class="btn btn-default btn-lg" href="{{ url_for('api.index') }}">API endpoints</a>
             </p>
         </div>
     </div>
@@ -87,27 +87,3 @@
 
 {% endblock %}
 
-{% block scripts %}
-{{ super() }}
-    <script>
-        $(function(){
-            // Disable the project button for now, display message instead
-            var button = $('#projects_btn');
-            button.hover(
-                function(event) {
-                    var elem = $(event.currentTarget);
-                    var width = elem.width();
-                    elem.text('Coming soon');
-                    elem.width(width);
-                },
-                function(event) {
-                    var elem = $(event.currentTarget);
-                    elem.text('Example projects');
-                });
-            button.click(
-                function(event) {
-                    event.preventDefault();
-                });
-        });
-    </script>
-{% endblock %}

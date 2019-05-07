@@ -13,7 +13,7 @@
             {% include 'blog/_post_title.html' %}
             <hr>
             <div class="blog-body">
-                {{ body|safe }}
+                {{ post.body_html|safe }}
             </div>
             {% else %}
             <p class="blog-body">No post to show.</p>
