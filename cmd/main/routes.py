@@ -13,3 +13,7 @@ def before_request():
 @bp.route('/index')
 def index():
     return render_template('index.html')
+
+@bp.route('/intel')
+def intel():
+    return render_template('intel_cover_letter.html')
